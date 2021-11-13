@@ -6,11 +6,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.order.ordermanagement.entity.CustomerEntity;
 import com.order.ordermanagement.entity.OrderEntity;
 import com.order.ordermanagement.mapper.CustomerMapper;
+import com.order.ordermanagement.mapper.OrderItemMapper;
 import com.order.ordermanagement.mapper.OrderMapper;
-import com.order.ordermanagement.model.CustomerModel;
 import com.order.ordermanagement.model.OrderModel;
 import com.order.ordermanagement.repo.CustomerRepo;
 import com.order.ordermanagement.repo.OrderRepo;
@@ -30,13 +29,11 @@ public class OrderService {
 	@Autowired
 	CustomerMapper customerMapper;
 	
+	@Autowired
+	OrderItemMapper orderItemMapper;
+	
 	public void addOrder(OrderModel orderModel) {
 		OrderEntity orderEntity = orderMapper.convertOrderModelToOrderEntity(orderModel);
-		CustomerModel customerModel = orderModel.getCustomerModel();
-		CustomerEntity customerEntity = customerRepo.getById(customerModel.getId());
-		if(customerEntity == null) {
-			customerRepo.save(customerMapper.convertCustomerModelToCustomerEntity(customerModel));
-		}
 		orderRepo.save(orderEntity);
 	}
 	
@@ -54,4 +51,13 @@ public class OrderService {
 		OrderModel orderModel = orderMapper.convertOrderEntityToOrderModel(orderEntity);
 		return orderModel;
 	}
+
+	public List<OrderModel> getTopOrders() {
+		return null;
+	}
+
+	public List<OrderModel> getOrdersByCustomer(int customerId) {
+		return null;
+	}
+
 }

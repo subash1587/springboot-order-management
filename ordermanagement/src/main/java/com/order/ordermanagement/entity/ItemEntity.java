@@ -1,10 +1,13 @@
 package com.order.ordermanagement.entity;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -18,6 +21,10 @@ public class ItemEntity {
 	private String name;
 	@Column
 	private double price;
+	
+	@OneToMany(mappedBy="item")
+	private List<OrderItemEntity> orderItemList;
+	
 	public int getId() {
 		return id;
 	}
@@ -36,6 +43,10 @@ public class ItemEntity {
 	public void setPrice(double price) {
 		this.price = price;
 	}
-	
-	
+	public List<OrderItemEntity> getOrderItemList() {
+		return orderItemList;
+	}
+	public void setOrderItemList(List<OrderItemEntity> orderItemList) {
+		this.orderItemList = orderItemList;
+	}
 }

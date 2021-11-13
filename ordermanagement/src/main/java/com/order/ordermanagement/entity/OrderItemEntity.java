@@ -5,20 +5,24 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="orderitem")
+@Table(name="order_item")
 public class OrderItemEntity {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column
 	private int id;
-	@Column(name="order_id")
-	private int orderId;
-	@Column(name="item_id")
-	private int itemId;
+	@ManyToOne 
+	@JoinColumn(name="order_id")
+	private OrderEntity order;
+	@ManyToOne
+	@JoinColumn(name="item_id")
+	private ItemEntity item;
 	
 	
 	public int getId() {
@@ -27,17 +31,17 @@ public class OrderItemEntity {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getOrderId() {
-		return orderId;
+	public OrderEntity getOrder() {
+		return order;
 	}
-	public void setOrderId(int orderId) {
-		this.orderId = orderId;
+	public void setOrder(OrderEntity order) {
+		this.order = order;
 	}
-	public int getItemId() {
-		return itemId;
+	public ItemEntity getItem() {
+		return item;
 	}
-	public void setItemId(int itemId) {
-		this.itemId = itemId;
+	public void setItem(ItemEntity item) {
+		this.item = item;
 	}
 	
 	

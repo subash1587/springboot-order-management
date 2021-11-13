@@ -6,7 +6,6 @@ public class OrderItemModel {
 	private int orderId;
 	private int itemId;
 	
-	
 	public int getId() {
 		return id;
 	}
@@ -25,6 +24,4 @@ public class OrderItemModel {
 	public void setItemId(int itemId) {
 		this.itemId = itemId;
 	}
-	
-	
 }
