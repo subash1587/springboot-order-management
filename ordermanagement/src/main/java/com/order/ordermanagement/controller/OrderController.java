@@ -23,7 +23,6 @@ public class OrderController {
 	public ResponseEntity<?> placeOrder(@RequestBody OrderModel orderModel) {
 		orderService.addOrder(orderModel);
 		return ResponseEntity.accepted().build();
-		
 	}
 	
 	@RequestMapping(path="/order",method=RequestMethod.GET)
@@ -38,15 +37,15 @@ public class OrderController {
 		return ResponseEntity.ok(orderModel);
 	}
 	
-	@RequestMapping(path="order/sort", method=RequestMethod.GET)
-	public ResponseEntity<?> getTopOrders(){
-		List<OrderModel> orderList = orderService.getTopOrders();
-		return ResponseEntity.ok(orderList);
-	}
-	
 	@RequestMapping(path="/order/customer/{id}", method=RequestMethod.GET)
 	public ResponseEntity<?> getOrdersByCustomer(@PathVariable("id") int id){
 		List<OrderModel> orderList = orderService.getOrdersByCustomer(id);
+		return ResponseEntity.ok(orderList);
+	}
+	
+	@RequestMapping(path="order/sort", method=RequestMethod.GET)
+	public ResponseEntity<?> getTopOrdersBySaleValue(){
+		List<OrderModel> orderList = orderService.getTopOrdersBySaleValue();
 		return ResponseEntity.ok(orderList);
 	}
 

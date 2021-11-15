@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.order.ordermanagement.entity.CustomerEntity;
 import com.order.ordermanagement.entity.OrderEntity;
 import com.order.ordermanagement.mapper.CustomerMapper;
 import com.order.ordermanagement.mapper.OrderItemMapper;
@@ -51,13 +52,28 @@ public class OrderService {
 		OrderModel orderModel = orderMapper.convertOrderEntityToOrderModel(orderEntity);
 		return orderModel;
 	}
-
-	public List<OrderModel> getTopOrders() {
-		return null;
+	
+	public List<OrderModel> getOrdersByCustomer(int customerId) {
+		CustomerEntity customerEntity = new CustomerEntity();
+		customerEntity.setId(customerId);
+		List<OrderEntity> orderEntityList = orderRepo.findAllByCustomerEntity(customerEntity);
+		List<OrderModel> orderModelList = new ArrayList<>();
+		for(OrderEntity order : orderEntityList) {
+			OrderModel orderModel = orderMapper.convertOrderEntityToOrderModel(order);
+			orderModelList.add(orderModel);
+		}
+		return orderModelList;
 	}
 
-	public List<OrderModel> getOrdersByCustomer(int customerId) {
-		return null;
+	public List<OrderModel> getTopOrdersBySaleValue() {
+		List<OrderModel> orderModelList = new ArrayList<>();
+		int[] topOrder = orderRepo.findTopOrders(2);
+		for(int i=0; i < topOrder.length; i++) {
+			OrderEntity orderEntity = orderRepo.findById(topOrder[i]).orElseThrow(null);
+			OrderModel orderModel = orderMapper.convertOrderEntityToOrderModel(orderEntity);
+			orderModelList.add(orderModel);
+		}
+		return orderModelList;
 	}
 
 }

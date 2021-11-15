@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.order.ordermanagement.entity.CustomerEntity;
 import com.order.ordermanagement.mapper.CustomerMapper;
 import com.order.ordermanagement.model.CustomerModel;
+import com.order.ordermanagement.model.OrderModel;
 import com.order.ordermanagement.repo.CustomerRepo;
 
 @Service

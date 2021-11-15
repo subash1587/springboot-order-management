@@ -31,4 +31,17 @@ public class OrderItemMapper {
 		}
 		return orderItemEntityList;
 	}
+
+	public List<OrderItemModel> convertOrderEntityToOrderItemModel(OrderEntity orderEntity) {
+		List<OrderItemModel> orderItemModelList = new ArrayList<>();
+		List<OrderItemEntity> orderItemEntityList = orderEntity.getOrderItemList();
+		for(OrderItemEntity orderItem : orderItemEntityList) {
+			OrderItemModel orderItemModel = new OrderItemModel();
+			orderItemModel.setId(orderItem.getId());
+			orderItemModel.setItemId(orderItem.getItem().getId());
+			orderItemModel.setOrderId(orderItem.getOrder().getId());
+			orderItemModelList.add(orderItemModel);
+		}
+		return orderItemModelList;
+	}
 }
