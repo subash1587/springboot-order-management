@@ -1,11 +1,12 @@
 package com.order.ordermanagement.mapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import com.order.ordermanagement.entity.CustomerEntity;
-import com.order.ordermanagement.entity.ItemEntity;
 import com.order.ordermanagement.model.CustomerModel;
-import com.order.ordermanagement.model.ItemModel;
 
 @Component
 public class CustomerMapper {
@@ -30,5 +31,14 @@ public class CustomerMapper {
 		customerEntity.setAddress(customerModel.getAddress());
 		customerEntity.setName(customerModel.getName());
 		return customerEntity;
+	}
+	
+	
+	public List<CustomerModel> convertCustomerEntityListToCustomerModelList(List<CustomerEntity> customerEntityList) {
+		List<CustomerModel> customerModelList = new ArrayList<>();
+		for(CustomerEntity customerEntity : customerEntityList) {
+			customerModelList.add(convertCustomerEntityToCustomerModel(customerEntity));
+		}
+		return customerModelList;
 	}
 }

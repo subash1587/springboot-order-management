@@ -1,16 +1,17 @@
 package com.order.ordermanagement.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.stereotype.Service;
 
 import com.order.ordermanagement.entity.CustomerEntity;
 import com.order.ordermanagement.mapper.CustomerMapper;
 import com.order.ordermanagement.model.CustomerModel;
-import com.order.ordermanagement.model.OrderModel;
 import com.order.ordermanagement.repo.CustomerRepo;
+
 
 @Service
 public class CustomerService {
@@ -28,11 +29,7 @@ public class CustomerService {
 
 	public List<CustomerModel> getAllCustomers() {
 		List<CustomerEntity> customerEntityList = customerRepo.findAll();
-		List<CustomerModel> customerModelList = new ArrayList<>();
-		for(CustomerEntity customerEntity : customerEntityList) {
-			customerModelList.add(customerMapper.convertCustomerEntityToCustomerModel(customerEntity));
-		}
-		return customerModelList;
+		return customerMapper.convertCustomerEntityListToCustomerModelList(customerEntityList);
 	}
 
 	public CustomerModel getCustomer(int id) {
@@ -52,11 +49,7 @@ public class CustomerService {
 
 	public List<CustomerModel> getCustomerByAddress(String address) {
 		List<CustomerEntity> customerEntityList = customerRepo.findAllByAddress(address);
-		List<CustomerModel> customerModelList = new ArrayList<>();
-		for(CustomerEntity customerEntity : customerEntityList) {
-			customerModelList.add(customerMapper.convertCustomerEntityToCustomerModel(customerEntity));
-		}
-		return customerModelList;
+		return customerMapper.convertCustomerEntityListToCustomerModelList(customerEntityList);
 	}
 
 	public void updateCustomerAddress(int id, CustomerModel customerModel) {
@@ -65,4 +58,13 @@ public class CustomerService {
 		customerRepo.save(customerEntity);
 	}
 
+	public List<CustomerModel> sortCustomerByName() {
+		List<CustomerEntity> customerEntityList = customerRepo.findAll(Sort.by(Sort.Direction.DESC, "name"));
+		return customerMapper.convertCustomerEntityListToCustomerModelList(customerEntityList);
+	}
+
+	public List<CustomerModel> sortCustomerByNameLength() {
+		List<CustomerEntity> customerEntityList = customerRepo.findAllCustomers(JpaSort.unsafe("LENGTH(name)"));
+		return customerMapper.convertCustomerEntityListToCustomerModelList(customerEntityList);
+	}
 }

@@ -53,6 +53,20 @@ public class ItemService {
 		return itemModelList;
 	}
 
+	public List<ItemModel> getItemsWithPagination(int index) {
+		Page<ItemEntity> itemEntityList = itemRepo.findItemWithPagination(PageRequest.of(index, 5, Sort.by(Direction.ASC, "price")));
+		List<ItemModel> itemModelList = new ArrayList<>();
+		for(ItemEntity itemEntity : itemEntityList) {
+			itemModelList.add(itemMapper.convertItemEntityToItemModel(itemEntity));
+		}
+		return itemModelList;
+	}
+	
+	public ItemModel getItemByNameAndId(String itemName, int itemId) {
+		ItemEntity itemEntity = itemRepo.findItemByNameAndID(itemName, itemId);
+		ItemModel itemModel = itemMapper.convertItemEntityToItemModel(itemEntity);
+		return itemModel;
+	}
 	
 	public void updateItem(int itemId, ItemModel itemModel) {
 		ItemEntity itemEntity = itemRepo.getById(itemId);

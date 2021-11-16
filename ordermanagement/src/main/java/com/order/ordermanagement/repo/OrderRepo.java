@@ -1,7 +1,10 @@
 package com.order.ordermanagement.repo;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,5 +24,8 @@ public interface OrderRepo extends JpaRepository<OrderEntity, Integer>{
 			+ "order by total desc\r\n"
 			+ "limit :limit",nativeQuery = true)
 	int[] findTopOrders(@Param("limit") int limit);
+
+	@Query(value = "select o from OrderEntity o")
+	Page<OrderEntity> findOrdersWithPagination(PageRequest pageRequest);
 
 }

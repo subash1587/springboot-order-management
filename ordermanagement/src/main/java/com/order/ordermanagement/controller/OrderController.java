@@ -49,4 +49,9 @@ public class OrderController {
 		return ResponseEntity.ok(orderList);
 	}
 
+	@RequestMapping(path="order/page/{index}", method=RequestMethod.GET)
+	public ResponseEntity<?> getOrdersWithPagination(@PathVariable("index") int index){
+		List<OrderModel> orderList = orderService.getOrdersWithPagination(index);
+		return ResponseEntity.ok(orderList);
+	}
 }

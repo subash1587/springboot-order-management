@@ -1,9 +1,12 @@
 package com.order.ordermanagement.service;
 
+import java.awt.print.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.order.ordermanagement.entity.CustomerEntity;
@@ -71,6 +74,17 @@ public class OrderService {
 		for(int i=0; i < topOrder.length; i++) {
 			OrderEntity orderEntity = orderRepo.findById(topOrder[i]).orElseThrow(null);
 			OrderModel orderModel = orderMapper.convertOrderEntityToOrderModel(orderEntity);
+			orderModelList.add(orderModel);
+		}
+		return orderModelList;
+	}
+
+	public List<OrderModel> getOrdersWithPagination(int index) {
+		CustomerEntity customerEntity = new CustomerEntity();
+		Page<OrderEntity> orderEntityList = orderRepo.findOrdersWithPagination(PageRequest.of(index, 5));
+		List<OrderModel> orderModelList = new ArrayList<>();
+		for(OrderEntity order : orderEntityList) {
+			OrderModel orderModel = orderMapper.convertOrderEntityToOrderModel(order);
 			orderModelList.add(orderModel);
 		}
 		return orderModelList;

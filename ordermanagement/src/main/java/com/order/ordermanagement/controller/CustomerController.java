@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.order.ordermanagement.model.CustomerModel;
-import com.order.ordermanagement.model.OrderModel;
 import com.order.ordermanagement.service.CustomerService;
 
 @RestController
@@ -60,6 +59,18 @@ public class CustomerController {
 	public ResponseEntity<?> updateCustomerAddress(@PathVariable("id") int id, @RequestBody CustomerModel customerModel){
 		customerService.updateCustomerAddress(id, customerModel);
 		return ResponseEntity.ok().build();
+	}
+	
+	@RequestMapping(path="/customer/sort", method=RequestMethod.GET)
+	public ResponseEntity<?> sortCustomerByName(){
+		List<CustomerModel> customerModelList = customerService.sortCustomerByName();
+		return ResponseEntity.ok(customerModelList);
+	}
+	
+	@RequestMapping(path="/customer/sort/namesize", method=RequestMethod.GET)
+	public ResponseEntity<?> sortCustomerByNameLength(){
+		List<CustomerModel> customerModelList = customerService.sortCustomerByNameLength();
+		return ResponseEntity.ok(customerModelList);
 	}
 
 }
