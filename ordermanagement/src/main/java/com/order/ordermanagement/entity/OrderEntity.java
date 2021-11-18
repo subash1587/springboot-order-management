@@ -1,5 +1,6 @@
 package com.order.ordermanagement.entity;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -20,6 +21,13 @@ public class OrderEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
 	private int id;
+
+	@Column
+	private Date orderDate;
+	@Column
+	private Date deliveryDate;
+	@Column
+	private char delivered;
 	
 	@ManyToOne
 	@JoinColumn(name="customer_id")
@@ -45,6 +53,24 @@ public class OrderEntity {
 	}
 	public void setOrderItemList(List<OrderItemEntity> orderItemList) {
 		this.orderItemList = orderItemList;
+	}
+	public Date getOrderDate() {
+		return orderDate;
+	}
+	public void setOrderDate(Date orderDate) {
+		this.orderDate = orderDate;
+	}
+	public Date getDeliveryDate() {
+		return deliveryDate;
+	}
+	public void setDeliveryDate(Date deliveryDate) {
+		this.deliveryDate = deliveryDate;
+	}
+	public char getDelivered() {
+		return delivered;
+	}
+	public void setDelivered(char delivered) {
+		this.delivered = delivered;
 	}
 	
 }

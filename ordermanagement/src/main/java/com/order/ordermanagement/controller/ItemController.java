@@ -67,4 +67,28 @@ public class ItemController {
 		ItemModel itemModel = itemService.getItemByNameAndId(name,id);
 		return ResponseEntity.ok(itemModel);
 	}
+	
+	@RequestMapping(path="/item/filter/price/high/{price}", method=RequestMethod.GET)
+	public ResponseEntity<?> getItemsWithHigherPrice(@PathVariable("price") double price){
+		List<ItemModel> itemModelList = itemService.getItemsWithHigherPrice(price);
+		return ResponseEntity.ok(itemModelList);
+	}
+	
+	@RequestMapping(path="/item/names", method=RequestMethod.GET)
+	public ResponseEntity<?> getItemsByNameList(){
+		List<ItemModel> itemModelList = itemService.getItemsByNameList();
+		return ResponseEntity.ok(itemModelList);
+	}
+	
+	@RequestMapping(path="/item/name/{id}", method=RequestMethod.PATCH)
+	public ResponseEntity<?> updateItemName(@PathVariable("id") int id, @RequestParam("name") String name){
+		itemService.updateItemName(id, name);
+		return ResponseEntity.ok().build();
+	}
+	
+	@RequestMapping(path="/item/insert", method=RequestMethod.POST)
+	public ResponseEntity<?> insertItem(@RequestBody ItemModel itemModel){
+		itemService.insertItem(itemModel);
+		return ResponseEntity.ok().build();
+	}
 }

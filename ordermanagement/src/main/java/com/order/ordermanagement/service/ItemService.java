@@ -1,6 +1,7 @@
 package com.order.ordermanagement.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +75,33 @@ public class ItemService {
 	  	itemRepo.save(updatedEntity);	  
 	}
 	 
-
+	public List<ItemModel> getItemsWithHigherPrice(double price) {
+		List<ItemEntity> itemEntityList = itemRepo.findItemsWithPrice(price);
+		List<ItemModel> itemModelList = new ArrayList<>();
+		for(ItemEntity itemEntity : itemEntityList) {
+			itemModelList.add(itemMapper.convertItemEntityToItemModel(itemEntity));
+		}
+		return itemModelList;
+	}
+	
+	public List<ItemModel> getItemsByNameList() {
+		List<String> names = Arrays.asList("item1","item2","item3");
+		List<ItemEntity> itemEntityList = itemRepo.findByNameList(names);
+		List<ItemModel> itemModelList = new ArrayList<>();
+		for(ItemEntity itemEntity : itemEntityList) {
+			itemModelList.add(itemMapper.convertItemEntityToItemModel(itemEntity));
+		}
+		return itemModelList;
+	}
+	
+	public void updateItemName(int id, String name) {
+		itemRepo.updateItemName(name, id);
+	}
+	
+	public void insertItem(ItemModel itemModel) {
+		itemRepo.insertItem(itemModel.getName(), itemModel.getPrice());
+	}
+	
 	public void deleteItem(int itemId) {
 		itemRepo.deleteById(itemId);
 	}
