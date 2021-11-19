@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.order.ordermanagement.entity.CustomerEntity;
 import com.order.ordermanagement.mapper.CustomerMapper;
 import com.order.ordermanagement.model.CustomerModel;
+import com.order.ordermanagement.model.custom.CustomerCountPerCity;
 import com.order.ordermanagement.repo.CustomerRepo;
 
 
@@ -66,5 +67,10 @@ public class CustomerService {
 	public List<CustomerModel> sortCustomerByNameLength() {
 		List<CustomerEntity> customerEntityList = customerRepo.findAllCustomers(JpaSort.unsafe("LENGTH(name)"));
 		return customerMapper.convertCustomerEntityListToCustomerModelList(customerEntityList);
+	}
+	
+	public List<CustomerCountPerCity> getCustomerCount() {
+		List<CustomerCountPerCity> customerCountList = customerRepo.findCustomerCountPerCity();
+		return customerCountList;
 	}
 }

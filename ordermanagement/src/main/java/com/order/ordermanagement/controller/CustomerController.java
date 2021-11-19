@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.order.ordermanagement.model.CustomerModel;
+import com.order.ordermanagement.model.custom.CustomerCountPerCity;
 import com.order.ordermanagement.service.CustomerService;
 
 @RestController
@@ -71,6 +72,11 @@ public class CustomerController {
 	public ResponseEntity<?> sortCustomerByNameLength(){
 		List<CustomerModel> customerModelList = customerService.sortCustomerByNameLength();
 		return ResponseEntity.ok(customerModelList);
+	}
+	
+	@RequestMapping(path="/customer/count", method=RequestMethod.GET)
+	public ResponseEntity<?> getCustomerCount(){
+		return ResponseEntity.ok(customerService.getCustomerCount());
 	}
 
 }

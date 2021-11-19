@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.order.ordermanagement.entity.CustomerEntity;
+import com.order.ordermanagement.model.custom.CustomerCountPerCity;
 
 public interface CustomerRepo extends JpaRepository<CustomerEntity, Integer>{
 
@@ -14,5 +15,9 @@ public interface CustomerRepo extends JpaRepository<CustomerEntity, Integer>{
 	
 	@Query(value="select u from CustomerEntity u")
 	List<CustomerEntity> findAllCustomers(Sort sort);
+	
+	@Query("select c.address as city, count(c.id) as totalCustomer "
+			+ "from CustomerEntity c group by c.address")
+	List<CustomerCountPerCity> findCustomerCountPerCity();
 
 }

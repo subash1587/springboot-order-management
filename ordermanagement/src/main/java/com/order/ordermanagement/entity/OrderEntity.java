@@ -27,7 +27,7 @@ public class OrderEntity {
 	@Column
 	private Date deliveryDate;
 	@Column
-	private char delivered;
+	private int delivered;
 	
 	@ManyToOne
 	@JoinColumn(name="customer_id")
@@ -66,10 +66,10 @@ public class OrderEntity {
 	public void setDeliveryDate(Date deliveryDate) {
 		this.deliveryDate = deliveryDate;
 	}
-	public char getDelivered() {
+	public int getDelivered() {
 		return delivered;
 	}
-	public void setDelivered(char delivered) {
+	public void setDelivered(int delivered) {
 		this.delivered = delivered;
 	}
 	

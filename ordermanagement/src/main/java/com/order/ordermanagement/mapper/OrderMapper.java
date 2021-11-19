@@ -31,6 +31,7 @@ public class OrderMapper {
 		orderModel.setId(orderEntity.getId());
 		orderModel.setCustomerModel(customerModel);
 		orderModel.setOrderItemList(orderItemModelList);
+		orderModel.setOrderDate(null);
 		return orderModel;
 	}
 	
