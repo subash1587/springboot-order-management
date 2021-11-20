@@ -1,6 +1,5 @@
 package com.order.ordermanagement.service;
 
-import java.awt.print.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,7 +79,6 @@ public class OrderService {
 	}
 
 	public List<OrderModel> getOrdersWithPagination(int index) {
-		CustomerEntity customerEntity = new CustomerEntity();
 		Page<OrderEntity> orderEntityList = orderRepo.findOrdersWithPagination(PageRequest.of(index, 5));
 		List<OrderModel> orderModelList = new ArrayList<>();
 		for(OrderEntity order : orderEntityList) {
@@ -88,6 +86,12 @@ public class OrderService {
 			orderModelList.add(orderModel);
 		}
 		return orderModelList;
+	}
+
+	public void updateOrderDelivery(int id) {
+		OrderEntity orderEntity = orderRepo.findById(id).orElseThrow(null);
+		OrderEntity updatedOrder = orderMapper.updateOrderEntity(orderEntity);
+		orderRepo.save(updatedOrder);
 	}
 
 }

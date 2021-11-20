@@ -43,15 +43,21 @@ public class OrderController {
 		return ResponseEntity.ok(orderList);
 	}
 	
-	@RequestMapping(path="order/sort", method=RequestMethod.GET)
+	@RequestMapping(path="/order/sort", method=RequestMethod.GET)
 	public ResponseEntity<?> getTopOrdersBySaleValue(){
 		List<OrderModel> orderList = orderService.getTopOrdersBySaleValue();
 		return ResponseEntity.ok(orderList);
 	}
 
-	@RequestMapping(path="order/page/{index}", method=RequestMethod.GET)
+	@RequestMapping(path="/order/page/{index}", method=RequestMethod.GET)
 	public ResponseEntity<?> getOrdersWithPagination(@PathVariable("index") int index){
 		List<OrderModel> orderList = orderService.getOrdersWithPagination(index);
 		return ResponseEntity.ok(orderList);
+	}
+	
+	@RequestMapping(path="/order/{id}", method=RequestMethod.PATCH)
+	public ResponseEntity<?> updateOrderDelivery(@PathVariable int id){
+		orderService.updateOrderDelivery(id);
+		return ResponseEntity.ok().build();
 	}
 }

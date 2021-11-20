@@ -1,14 +1,15 @@
 package com.order.ordermanagement.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 public class OrderModel {
 
 	private int id;
-	private Date orderDate;
-	private Date deliveryDate;
-	private int delivered;
+	private LocalDate orderDate;
+	private LocalDate estimatedDeliveryDate;
+	private LocalDate actualDeliveryDate;
+	private boolean isDelivered;
 	private CustomerModel customerModel;
 	private List<OrderItemModel> orderItemList;
 	
@@ -30,23 +31,29 @@ public class OrderModel {
 	public void setOrderItemList(List<OrderItemModel> orderItemList) {
 		this.orderItemList = orderItemList;
 	}
-	public Date getOrderDate() {
+	public LocalDate getOrderDate() {
 		return orderDate;
 	}
-	public void setOrderDate(Date orderDate) {
+	public void setOrderDate(LocalDate orderDate) {
 		this.orderDate = orderDate;
 	}
-	public Date getDeliveryDate() {
-		return deliveryDate;
+	public LocalDate getEstimatedDeliveryDate() {
+		return estimatedDeliveryDate;
 	}
-	public void setDeliveryDate(Date deliveryDate) {
-		this.deliveryDate = deliveryDate;
+	public void setEstimatedDeliveryDate(LocalDate estimatedDeliveryDate) {
+		this.estimatedDeliveryDate = estimatedDeliveryDate;
 	}
-	public int getDelivered() {
-		return delivered;
+	public LocalDate getActualDeliveryDate() {
+		return actualDeliveryDate;
 	}
-	public void setDelivered(char delivered) {
-		this.delivered = delivered;
+	public void setActualDeliveryDate(LocalDate actualDeliveryDate) {
+		this.actualDeliveryDate = actualDeliveryDate;
+	}
+	public boolean getIsDelivered() {
+		return isDelivered;
+	}
+	public void setIsDelivered(boolean isDelivered) {
+		this.isDelivered = isDelivered;
 	}
 		
 }

@@ -1,6 +1,6 @@
 package com.order.ordermanagement.entity;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -22,12 +22,14 @@ public class OrderEntity {
 	@Column
 	private int id;
 
-	@Column
-	private Date orderDate;
-	@Column
-	private Date deliveryDate;
-	@Column
-	private int delivered;
+	@Column(name="order_date")
+	private LocalDate orderDate;
+	@Column(name="estimated_delivery_date")
+	private LocalDate estimatedDeliveryDate;
+	@Column(name="actual_delivery_date")
+	private LocalDate actualDeliveryDate;
+	@Column(name="is_delivered")
+	private boolean isDelivered;
 	
 	@ManyToOne
 	@JoinColumn(name="customer_id")
@@ -54,23 +56,29 @@ public class OrderEntity {
 	public void setOrderItemList(List<OrderItemEntity> orderItemList) {
 		this.orderItemList = orderItemList;
 	}
-	public Date getOrderDate() {
+	public LocalDate getOrderDate() {
 		return orderDate;
 	}
-	public void setOrderDate(Date orderDate) {
+	public void setOrderDate(LocalDate orderDate) {
 		this.orderDate = orderDate;
 	}
-	public Date getDeliveryDate() {
-		return deliveryDate;
+	public LocalDate getEstimatedDeliveryDate() {
+		return estimatedDeliveryDate;
 	}
-	public void setDeliveryDate(Date deliveryDate) {
-		this.deliveryDate = deliveryDate;
+	public void setEstimatedDeliveryDate(LocalDate estimatedDeliveryDate) {
+		this.estimatedDeliveryDate = estimatedDeliveryDate;
 	}
-	public int getDelivered() {
-		return delivered;
+	public LocalDate getActualDeliveryDate() {
+		return actualDeliveryDate;
 	}
-	public void setDelivered(int delivered) {
-		this.delivered = delivered;
+	public void setActualDeliveryDate(LocalDate actualDeliveryDate) {
+		this.actualDeliveryDate = actualDeliveryDate;
+	}
+	public boolean getIsDelivered() {
+		return isDelivered;
+	}
+	public void setIsDelivered(boolean isDelivered) {
+		this.isDelivered = isDelivered;
 	}
 	
 }
