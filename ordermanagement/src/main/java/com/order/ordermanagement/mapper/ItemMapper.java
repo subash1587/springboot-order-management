@@ -13,6 +13,8 @@ public class ItemMapper {
 		itemEntity.setId(itemModel.getId());
 		itemEntity.setName(itemModel.getName());
 		itemEntity.setPrice(itemModel.getPrice());
+		itemEntity.setCategory(itemModel.getCategory());
+		itemEntity.setRating(itemModel.getRating());
 		return itemEntity;
 	}
 	
@@ -21,12 +23,24 @@ public class ItemMapper {
 		itemModel.setId(itemEntity.getId());
 		itemModel.setName(itemEntity.getName());
 		itemModel.setPrice(itemEntity.getPrice());
+		itemModel.setCategory(itemEntity.getCategory());
+		itemModel.setRating(itemEntity.getRating());
 		return itemModel;
 	}
 
 	public ItemEntity mapItemModelToItemEntity(ItemModel itemModel, ItemEntity itemEntity) {
-		itemEntity.setName(itemModel.getName());
-		itemEntity.setPrice(itemModel.getPrice());
+		if(itemModel.getName() != null) {
+			itemEntity.setName(itemModel.getName());
+		}
+		if (itemModel.getPrice() >= 0) {
+			itemEntity.setPrice(itemModel.getPrice());
+		}
+		if (itemModel.getCategory() != null) {
+			itemEntity.setCategory(itemModel.getCategory());
+		}
+		if(itemModel.getRating() >= 0) {
+			itemEntity.setRating(itemModel.getRating());
+		}
 		return itemEntity;
 	}
 }

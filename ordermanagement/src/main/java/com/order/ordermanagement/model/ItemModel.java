@@ -5,6 +5,9 @@ public class ItemModel {
 	private int id;
 	private String name;
 	private double price;
+	private String category;
+	private int rating;
+	
 	public int getId() {
 		return id;
 	}
@@ -23,6 +26,16 @@ public class ItemModel {
 	public void setPrice(double price) {
 		this.price = price;
 	}
-	
-	
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	public int getRating() {
+		return rating;
+	}
+	public void setRating(int rating) {
+		this.rating = rating;
+	}
 }

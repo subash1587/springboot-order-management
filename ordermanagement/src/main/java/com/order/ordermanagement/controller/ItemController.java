@@ -44,7 +44,7 @@ public class ItemController {
 		return ResponseEntity.ok(itemModel);
 	}
 	
-	@RequestMapping(path="/item/{id}", method=RequestMethod.PUT) 
+	@RequestMapping(path="/item/{id}", method=RequestMethod.PATCH) 
 	public ResponseEntity<?> updateItem(@PathVariable("id") int itemId, @RequestBody ItemModel itemModel) {
 		itemService.updateItem(itemId, itemModel); 
 		return ResponseEntity.ok().build(); 
@@ -71,6 +71,12 @@ public class ItemController {
 	@RequestMapping(path="/item/filter/price/high/{price}", method=RequestMethod.GET)
 	public ResponseEntity<?> getItemsWithHigherPrice(@PathVariable("price") double price){
 		List<ItemModel> itemModelList = itemService.getItemsWithHigherPrice(price);
+		return ResponseEntity.ok(itemModelList);
+	}
+	
+	@RequestMapping(path="/item/filter", method=RequestMethod.GET)
+	public ResponseEntity<?> searchItemsWithFilter(){
+		List<ItemModel> itemModelList = itemService.searchItemsWithFilter();
 		return ResponseEntity.ok(itemModelList);
 	}
 	

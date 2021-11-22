@@ -70,9 +70,9 @@ public class ItemService {
 	}
 	
 	public void updateItem(int itemId, ItemModel itemModel) {
-		ItemEntity itemEntity = itemRepo.getById(itemId);
-	  	ItemEntity updatedEntity = itemMapper.mapItemModelToItemEntity(itemModel,itemEntity);
-	  	itemRepo.save(updatedEntity);	  
+		ItemEntity itemEntity = itemRepo.findById(itemId).orElseThrow(null);
+	  	ItemEntity updatedItemEntity = itemMapper.mapItemModelToItemEntity(itemModel,itemEntity);
+	  	itemRepo.save(updatedItemEntity);	  
 	}
 	 
 	public List<ItemModel> getItemsWithHigherPrice(double price) {
@@ -104,6 +104,11 @@ public class ItemService {
 	
 	public void deleteItem(int itemId) {
 		itemRepo.deleteById(itemId);
+	}
+
+	public List<ItemModel> searchItemsWithFilter() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

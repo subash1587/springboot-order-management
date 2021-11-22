@@ -21,6 +21,10 @@ public class ItemEntity {
 	private String name;
 	@Column
 	private double price;
+	@Column
+	private String category;
+	@Column
+	private int rating;
 	
 	@OneToMany(mappedBy="item")
 	private List<OrderItemEntity> orderItemList;
@@ -48,5 +52,17 @@ public class ItemEntity {
 	}
 	public void setOrderItemList(List<OrderItemEntity> orderItemList) {
 		this.orderItemList = orderItemList;
+	}
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	public int getRating() {
+		return rating;
+	}
+	public void setRating(int rating) {
+		this.rating = rating;
 	}
 }

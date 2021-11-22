@@ -14,8 +14,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.order.ordermanagement.entity.ItemEntity;
+import com.order.ordermanagement.repo.custom.ItemRepoCustom;
 
-public interface ItemRepo extends JpaRepository<ItemEntity, Integer>{
+public interface ItemRepo extends JpaRepository<ItemEntity, Integer>, ItemRepoCustom{
 
 	@Query(value="select * from item", nativeQuery=true)
 	Page<ItemEntity> findItemWithPagination(Pageable pageable);
