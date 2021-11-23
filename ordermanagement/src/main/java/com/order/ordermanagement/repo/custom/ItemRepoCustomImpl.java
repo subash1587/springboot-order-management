@@ -2,6 +2,7 @@ package com.order.ordermanagement.repo.custom;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -17,16 +18,29 @@ public class ItemRepoCustomImpl implements ItemRepoCustom{
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	public List<ItemEntity> findItem(List<String> filters) {
+	public List<ItemEntity> findItem(Map<String, String> filters) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<ItemEntity> cr = cb.createQuery(ItemEntity.class);
 		Root<ItemEntity> item = cr.from(ItemEntity.class);
-		cr.select(item);
 		List<Predicate> predicates = new ArrayList<>();
-		for(String filterColumn : filters) {
-			predicates.add(cb.gt(item.get("price"), 50));
+		for(Map.Entry<String, String> filterColumn : filters.entrySet()) {
+			switch(filterColumn.getKey()){
+				case "pricegt":
+					predicates.add(cb.ge(item.get("price"), Integer.parseInt(filterColumn.getValue())));
+					break;
+				case "pricelt":
+					predicates.add(cb.lt(item.get("price"), Integer.parseInt(filterColumn.getValue())));
+					break;
+				case "category":
+					predicates.add(cb.equal(item.get("category"), filterColumn.getValue()));
+					break;
+				case "ratinggt":
+					predicates.add(cb.ge(item.get("rating"), Integer.parseInt(filterColumn.getValue())));
+					break;
+			}
 		}
-		return null;
+		cr.select(item).where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
+		return entityManager.createQuery(cr).getResultList();
 	}
 
 }

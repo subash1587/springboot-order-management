@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import com.order.ordermanagement.common.exception.AppException;
+import com.order.ordermanagement.common.exception.OrderError;
 import com.order.ordermanagement.entity.CustomerEntity;
 import com.order.ordermanagement.entity.OrderEntity;
 import com.order.ordermanagement.mapper.CustomerMapper;
@@ -50,7 +52,7 @@ public class OrderService {
 	}
 
 	public OrderModel searchOrder(int orderId) {
-		OrderEntity orderEntity = orderRepo.getById(orderId);
+		OrderEntity orderEntity = orderRepo.findById(orderId).orElseThrow(()-> new AppException(OrderError.ORDER_NOT_FOUND));
 		OrderModel orderModel = orderMapper.convertOrderEntityToOrderModel(orderEntity);
 		return orderModel;
 	}

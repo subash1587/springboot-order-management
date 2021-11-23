@@ -1,6 +1,7 @@
 package com.order.ordermanagement.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -75,8 +76,8 @@ public class ItemController {
 	}
 	
 	@RequestMapping(path="/item/filter", method=RequestMethod.GET)
-	public ResponseEntity<?> searchItemsWithFilter(){
-		List<ItemModel> itemModelList = itemService.searchItemsWithFilter();
+	public ResponseEntity<?> searchItemsWithFilter(@RequestBody Map<String, String> filterMap){
+		List<ItemModel> itemModelList = itemService.searchItemsWithFilter(filterMap);
 		return ResponseEntity.ok(itemModelList);
 	}
 	
