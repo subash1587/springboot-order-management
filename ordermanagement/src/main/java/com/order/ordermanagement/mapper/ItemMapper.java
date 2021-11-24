@@ -1,5 +1,8 @@
 package com.order.ordermanagement.mapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import com.order.ordermanagement.entity.ItemEntity;
@@ -42,5 +45,13 @@ public class ItemMapper {
 			itemEntity.setRating(itemModel.getRating());
 		}
 		return itemEntity;
+	}
+
+	public List<ItemModel> convertItemEntityListToItemModelList(List<ItemEntity> itemEntityList) {
+		List<ItemModel> itemModelList = new ArrayList<>();
+		for(ItemEntity itemEntity : itemEntityList) {
+			itemModelList.add(convertItemEntityToItemModel(itemEntity));
+		}
+		return itemModelList;
 	}
 }

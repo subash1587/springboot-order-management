@@ -33,17 +33,12 @@ public class ItemService {
 
 	public List<ItemModel> getAllItems() {
 		List<ItemEntity> itemEntityList = itemRepo.findAll();
-		List<ItemModel> itemModelList = new ArrayList<>();
-		for(ItemEntity itemEntity : itemEntityList) {
-			itemModelList.add(itemMapper.convertItemEntityToItemModel(itemEntity));
-		}
-		return itemModelList;
+		return itemMapper.convertItemEntityListToItemModelList(itemEntityList);
 	}
 
 	public ItemModel getItem(int itemId) {
 		ItemEntity itemEntity = itemRepo.getById(itemId);
-		ItemModel itemModel = itemMapper.convertItemEntityToItemModel(itemEntity);
-		return itemModel;
+		return itemMapper.convertItemEntityToItemModel(itemEntity);
 	}
 	
 	public List<ItemModel> sortItemByPrice() {
@@ -66,8 +61,7 @@ public class ItemService {
 	
 	public ItemModel getItemByNameAndId(String itemName, int itemId) {
 		ItemEntity itemEntity = itemRepo.findItemByNameAndID(itemName, itemId);
-		ItemModel itemModel = itemMapper.convertItemEntityToItemModel(itemEntity);
-		return itemModel;
+		return itemMapper.convertItemEntityToItemModel(itemEntity);
 	}
 	
 	public void updateItem(int itemId, ItemModel itemModel) {
@@ -78,21 +72,18 @@ public class ItemService {
 	 
 	public List<ItemModel> getItemsWithHigherPrice(double price) {
 		List<ItemEntity> itemEntityList = itemRepo.findItemsWithPrice(price);
-		List<ItemModel> itemModelList = new ArrayList<>();
-		for(ItemEntity itemEntity : itemEntityList) {
-			itemModelList.add(itemMapper.convertItemEntityToItemModel(itemEntity));
-		}
-		return itemModelList;
+		return itemMapper.convertItemEntityListToItemModelList(itemEntityList);
 	}
 	
 	public List<ItemModel> getItemsByNameList() {
-		List<String> names = Arrays.asList("item1","item2","item3");
+		List<String> names = Arrays.asList("Cashew 100g","Dark Fantacy");
 		List<ItemEntity> itemEntityList = itemRepo.findByNameList(names);
-		List<ItemModel> itemModelList = new ArrayList<>();
-		for(ItemEntity itemEntity : itemEntityList) {
-			itemModelList.add(itemMapper.convertItemEntityToItemModel(itemEntity));
-		}
-		return itemModelList;
+		return itemMapper.convertItemEntityListToItemModelList(itemEntityList);
+	}
+
+	public List<ItemModel> searchItemsWithFilter(Map<String, String> filterMap) {
+		List<ItemEntity> itemEntityList = itemRepo.findItem(filterMap);
+		return itemMapper.convertItemEntityListToItemModelList(itemEntityList);
 	}
 	
 	public void updateItemName(int id, String name) {
@@ -105,15 +96,6 @@ public class ItemService {
 	
 	public void deleteItem(int itemId) {
 		itemRepo.deleteById(itemId);
-	}
-
-	public List<ItemModel> searchItemsWithFilter(Map<String, String> filterMap) {
-		List<ItemEntity> itemEntityList = itemRepo.findItem(filterMap);
-		List<ItemModel> itemModelList = new ArrayList<>();
-		for(ItemEntity itemEntity : itemEntityList) {
-			itemModelList.add(itemMapper.convertItemEntityToItemModel(itemEntity));
-		}
-		return itemModelList;
 	}
 
 }

@@ -54,7 +54,7 @@ public class CustomerService {
 	}
 
 	public void updateCustomerAddress(int id, CustomerModel customerModel) {
-		CustomerEntity customerEntity = customerRepo.getById(id);
+		CustomerEntity customerEntity = customerRepo.findById(id).orElseThrow();
 		customerEntity.setAddress(customerModel.getAddress());
 		customerRepo.save(customerEntity);
 	}

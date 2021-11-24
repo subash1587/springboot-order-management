@@ -44,29 +44,19 @@ public class OrderService {
 	
 	public List<OrderModel> getAllOrder() {
 		List<OrderEntity> orderEntityList = orderRepo.findAll();
-		List<OrderModel> orderModelList = new ArrayList<>();
-		for(OrderEntity orderEntity : orderEntityList) {
-			orderModelList.add(orderMapper.convertOrderEntityToOrderModel(orderEntity ));
-		}
-		return orderModelList;
+		return orderMapper.convertOrderEntityListToOrderModelList(orderEntityList);
 	}
 
 	public OrderModel searchOrder(int orderId) {
 		OrderEntity orderEntity = orderRepo.findById(orderId).orElseThrow(()-> new AppException(OrderError.ORDER_NOT_FOUND));
-		OrderModel orderModel = orderMapper.convertOrderEntityToOrderModel(orderEntity);
-		return orderModel;
+		return orderMapper.convertOrderEntityToOrderModel(orderEntity);
 	}
 	
 	public List<OrderModel> getOrdersByCustomer(int customerId) {
 		CustomerEntity customerEntity = new CustomerEntity();
 		customerEntity.setId(customerId);
 		List<OrderEntity> orderEntityList = orderRepo.findAllByCustomerEntity(customerEntity);
-		List<OrderModel> orderModelList = new ArrayList<>();
-		for(OrderEntity order : orderEntityList) {
-			OrderModel orderModel = orderMapper.convertOrderEntityToOrderModel(order);
-			orderModelList.add(orderModel);
-		}
-		return orderModelList;
+		return orderMapper.convertOrderEntityListToOrderModelList(orderEntityList);
 	}
 
 	public List<OrderModel> getTopOrdersBySaleValue() {
