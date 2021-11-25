@@ -6,6 +6,8 @@ public class UserLoginModel {
 	private String userName;
 	private String password;
 	private String role;
+	private String token;
+	
 	public int getId() {
 		return id;
 	}
@@ -29,5 +31,11 @@ public class UserLoginModel {
 	}
 	public void setRole(String role) {
 		this.role = role;
+	}
+	public String getToken() {
+		return token;
+	}
+	public void setToken(String token) {
+		this.token = token;
 	}
 }

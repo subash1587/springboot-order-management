@@ -24,6 +24,9 @@ public class UserLoginEntity {
 	
 	@Column
 	private String role;
+	
+	@Column
+	private String token;
 
 	public int getId() {
 		return id;
@@ -55,6 +58,14 @@ public class UserLoginEntity {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 
 }

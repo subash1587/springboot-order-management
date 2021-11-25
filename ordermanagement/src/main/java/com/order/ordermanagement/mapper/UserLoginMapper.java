@@ -16,6 +16,7 @@ public class UserLoginMapper {
 		userLoginEntity.setUserName(userLoginModel.getUserName());
 		userLoginEntity.setPassword(userLoginModel.getPassword());
 		userLoginEntity.setRole(userLoginModel.getRole());
+		userLoginEntity.setToken("a1b2c3d4e5");
 		return userLoginEntity ;	
 	}
 	
