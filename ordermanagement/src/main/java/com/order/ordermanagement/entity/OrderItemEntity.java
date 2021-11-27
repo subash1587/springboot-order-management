@@ -24,6 +24,9 @@ public class OrderItemEntity {
 	@JoinColumn(name="item_id")
 	private ItemEntity item;
 	
+	@Column(name="item_count")
+	private int itemCount;
+	
 	
 	public int getId() {
 		return id;
@@ -43,7 +46,10 @@ public class OrderItemEntity {
 	public void setItem(ItemEntity item) {
 		this.item = item;
 	}
-	
-	
-
+	public int getItemCount() {
+		return itemCount;
+	}
+	public void setItemCount(int itemCount) {
+		this.itemCount = itemCount;
+	}
 }

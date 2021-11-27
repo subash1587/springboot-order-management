@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import com.order.ordermanagement.common.exception.ApiException;
 import com.order.ordermanagement.common.exception.AppException;
 import com.order.ordermanagement.common.exception.OrderError;
 import com.order.ordermanagement.entity.CustomerEntity;
@@ -48,7 +49,8 @@ public class OrderService {
 	}
 
 	public OrderModel searchOrder(int orderId) {
-		OrderEntity orderEntity = orderRepo.findById(orderId).orElseThrow(()-> new AppException(OrderError.ORDER_NOT_FOUND));
+		OrderEntity orderEntity = orderRepo.findById(orderId)
+				.orElseThrow(()-> new ApiException(404,"Not.Found","Order not found","Validation Error"));
 		return orderMapper.convertOrderEntityToOrderModel(orderEntity);
 	}
 	
@@ -56,6 +58,9 @@ public class OrderService {
 		CustomerEntity customerEntity = new CustomerEntity();
 		customerEntity.setId(customerId);
 		List<OrderEntity> orderEntityList = orderRepo.findAllByCustomerEntity(customerEntity);
+		if(orderEntityList.size() == 0) {
+			throw new ApiException(404,"Not.Found","No Orders were found for the customer","Validation Error");
+		}
 		return orderMapper.convertOrderEntityListToOrderModelList(orderEntityList);
 	}
 
@@ -63,7 +68,8 @@ public class OrderService {
 		List<OrderModel> orderModelList = new ArrayList<>();
 		int[] topOrder = orderRepo.findTopOrders(2);
 		for(int i=0; i < topOrder.length; i++) {
-			OrderEntity orderEntity = orderRepo.findById(topOrder[i]).orElseThrow(null);
+			OrderEntity orderEntity = orderRepo.findById(topOrder[i])
+					.orElseThrow(()-> new ApiException(404,"Not.Found","Order not found","Validation Error"));
 			OrderModel orderModel = orderMapper.convertOrderEntityToOrderModel(orderEntity);
 			orderModelList.add(orderModel);
 		}
@@ -80,9 +86,10 @@ public class OrderService {
 		return orderModelList;
 	}
 
-	public void updateOrderDelivery(int id) {
-		OrderEntity orderEntity = orderRepo.findById(id).orElseThrow(null);
-		OrderEntity updatedOrder = orderMapper.updateOrderEntity(orderEntity);
+	public void updateOrder(int id, String status) {
+		OrderEntity orderEntity = orderRepo.findById(id)
+				.orElseThrow(()-> new ApiException(404,"Not.Found","Order not found","Validation Error"));
+		OrderEntity updatedOrder = orderMapper.updateOrderEntity(orderEntity, status);
 		orderRepo.save(updatedOrder);
 	}
 

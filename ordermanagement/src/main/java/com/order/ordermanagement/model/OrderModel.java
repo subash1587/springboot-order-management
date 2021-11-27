@@ -6,10 +6,12 @@ import java.util.List;
 public class OrderModel {
 
 	private int id;
+	private String status;
 	private LocalDate orderDate;
+	private LocalDate shippedDate;
 	private LocalDate estimatedDeliveryDate;
 	private LocalDate actualDeliveryDate;
-	private boolean isDelivered;
+	private LocalDate cancelledDate;
 	private CustomerModel customerModel;
 	private List<OrderItemModel> orderItemList;
 	
@@ -37,6 +39,12 @@ public class OrderModel {
 	public void setOrderDate(LocalDate orderDate) {
 		this.orderDate = orderDate;
 	}
+	public LocalDate getShippedDate() {
+		return shippedDate;
+	}
+	public void setShippedDate(LocalDate shippedDate) {
+		this.shippedDate = shippedDate;
+	}
 	public LocalDate getEstimatedDeliveryDate() {
 		return estimatedDeliveryDate;
 	}
@@ -49,11 +57,16 @@ public class OrderModel {
 	public void setActualDeliveryDate(LocalDate actualDeliveryDate) {
 		this.actualDeliveryDate = actualDeliveryDate;
 	}
-	public boolean getIsDelivered() {
-		return isDelivered;
+	public String getStatus() {
+		return status;
 	}
-	public void setIsDelivered(boolean isDelivered) {
-		this.isDelivered = isDelivered;
+	public void setStatus(String status) {
+		this.status = status;
 	}
-		
+	public LocalDate getCancelledDate() {
+		return cancelledDate;
+	}
+	public void setCancelledDate(LocalDate cancelledDate) {
+		this.cancelledDate = cancelledDate;
+	}
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.order.ordermanagement.model.OrderModel;
@@ -56,8 +57,8 @@ public class OrderController {
 	}
 	
 	@RequestMapping(path="/order/{id}", method=RequestMethod.PATCH)
-	public ResponseEntity<?> updateOrderDelivery(@PathVariable int id){
-		orderService.updateOrderDelivery(id);
+	public ResponseEntity<?> updateOrder(@PathVariable int id, @RequestParam("status") String status){
+		orderService.updateOrder(id, status);
 		return ResponseEntity.ok().build();
 	}
 }

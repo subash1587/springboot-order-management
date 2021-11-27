@@ -21,15 +21,18 @@ public class OrderEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
 	private int id;
-
+	@Column
+	private String status;
 	@Column(name="order_date")
 	private LocalDate orderDate;
+	@Column(name="shipped_date")
+	private LocalDate shippedDate;
 	@Column(name="estimated_delivery_date")
 	private LocalDate estimatedDeliveryDate;
 	@Column(name="actual_delivery_date")
 	private LocalDate actualDeliveryDate;
-	@Column(name="is_delivered")
-	private boolean isDelivered;
+	@Column
+	private LocalDate cancelledDate;
 	
 	@ManyToOne
 	@JoinColumn(name="customer_id")
@@ -62,6 +65,12 @@ public class OrderEntity {
 	public void setOrderDate(LocalDate orderDate) {
 		this.orderDate = orderDate;
 	}
+	public LocalDate getShippedDate() {
+		return shippedDate;
+	}
+	public void setShippedDate(LocalDate shippedDate) {
+		this.shippedDate = shippedDate;
+	}
 	public LocalDate getEstimatedDeliveryDate() {
 		return estimatedDeliveryDate;
 	}
@@ -74,11 +83,16 @@ public class OrderEntity {
 	public void setActualDeliveryDate(LocalDate actualDeliveryDate) {
 		this.actualDeliveryDate = actualDeliveryDate;
 	}
-	public boolean getIsDelivered() {
-		return isDelivered;
+	public String getStatus() {
+		return status;
 	}
-	public void setIsDelivered(boolean isDelivered) {
-		this.isDelivered = isDelivered;
+	public void setStatus(String status) {
+		this.status = status;
 	}
-	
+	public LocalDate getCancelledDate() {
+		return cancelledDate;
+	}
+	public void setCancelledDate(LocalDate cancelledDate) {
+		this.cancelledDate = cancelledDate;
+	}
 }
