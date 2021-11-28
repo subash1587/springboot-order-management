@@ -12,7 +12,7 @@ public class OrderModel {
 	private LocalDate estimatedDeliveryDate;
 	private LocalDate actualDeliveryDate;
 	private LocalDate cancelledDate;
-	private CustomerModel customerModel;
+	private int customerId;
 	private List<OrderItemModel> orderItemList;
 	
 	public int getId() {
@@ -21,11 +21,11 @@ public class OrderModel {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public CustomerModel getCustomerModel() {
-		return customerModel;
+	public int getCustomerId() {
+		return customerId;
 	}
-	public void setCustomerModel(CustomerModel customerModel) {
-		this.customerModel = customerModel;
+	public void setCustomerId(int customerId) {
+		this.customerId = customerId;
 	}
 	public List<OrderItemModel> getOrderItemList() {
 		return orderItemList;

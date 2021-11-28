@@ -11,7 +11,6 @@ import com.order.ordermanagement.common.exception.ApiException;
 import com.order.ordermanagement.entity.CustomerEntity;
 import com.order.ordermanagement.entity.OrderEntity;
 import com.order.ordermanagement.entity.OrderItemEntity;
-import com.order.ordermanagement.model.CustomerModel;
 import com.order.ordermanagement.model.OrderItemModel;
 import com.order.ordermanagement.model.OrderModel;
 import com.order.ordermanagement.repo.CustomerRepo;
@@ -31,10 +30,9 @@ public class OrderMapper {
 	public OrderModel convertOrderEntityToOrderModel(OrderEntity orderEntity){
 		OrderModel orderModel = new OrderModel();
 		CustomerEntity customerEntity = orderEntity.getCustomerEntity();
-		CustomerModel customerModel = customerMapper.convertCustomerEntityToCustomerModel(customerEntity);
 		List<OrderItemModel> orderItemModelList = orderItemMapper.convertOrderEntityToOrderItemModel(orderEntity);
 		orderModel.setId(orderEntity.getId());
-		orderModel.setCustomerModel(customerModel);
+		orderModel.setCustomerId(customerEntity.getId());
 		orderModel.setOrderItemList(orderItemModelList);
 		orderModel.setStatus(orderEntity.getStatus());
 		orderModel.setOrderDate(orderEntity.getOrderDate());
@@ -46,11 +44,9 @@ public class OrderMapper {
 	}
 	
 	public OrderEntity convertOrderModelToOrderEntity(OrderModel orderModel) {
-		CustomerModel customerModel = orderModel.getCustomerModel();
-		CustomerEntity customerEntity = new CustomerEntity();
-		customerEntity = customerRepo.findById(customerModel.getId())
+		int customerId= orderModel.getCustomerId();
+		CustomerEntity customerEntity = customerRepo.findById(customerId)
 				.orElseThrow(()-> new ApiException(404,"Not Found","Customer is not found","Validation Error"));
-		customerEntity = customerMapper.convertCustomerModelToCustomerEntity(customerModel);
 		OrderEntity orderEntity = new OrderEntity();
 		List<OrderItemEntity> orderItemEntityList = orderItemMapper.convertOrderModelToOrderItemEntity(orderModel, orderEntity);
 		orderEntity.setCustomerEntity(customerEntity);		
