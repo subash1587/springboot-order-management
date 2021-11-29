@@ -3,16 +3,25 @@ package com.order.ordermanagement.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.order.ordermanagement.common.exception.ApiException;
+import com.order.ordermanagement.common.exception.CustomerError;
 import com.order.ordermanagement.entity.CustomerAddressEntity;
 import com.order.ordermanagement.entity.CustomerEntity;
 import com.order.ordermanagement.model.CustomerAddressModel;
+import com.order.ordermanagement.repo.CustomerRepo;
 
 @Component
 public class CustomerAddressMapper {
+	
+	@Autowired
+	CustomerRepo customerRepo;
 
 	public CustomerAddressEntity convertCustomerAddressModelToCustomerAddressEntity(CustomerAddressModel customerAddressModel) {
+		CustomerEntity customer = customerRepo.findById(customerAddressModel.getCustomerId())
+				.orElseThrow(()-> new ApiException(CustomerError.CUSTOMER_NOT_FOUND));
 		CustomerAddressEntity customerAddressEntity = new CustomerAddressEntity();
 		customerAddressEntity.setAddressType(customerAddressModel.getAddressType());
 		customerAddressEntity.setAddressLine1(customerAddressModel.getAddressLine1());
@@ -22,8 +31,6 @@ public class CustomerAddressMapper {
 		customerAddressEntity.setState(customerAddressModel.getState());
 		customerAddressEntity.setPincode(customerAddressModel.getPincode());
 		customerAddressEntity.setDefaultAddressInd(customerAddressModel.getDefaultAddressInd());
-		CustomerEntity customer = new CustomerEntity();
-		customer.setId(customerAddressModel.getCustomerId());
 		customerAddressEntity.setCustomerEntity(customer);
 		return customerAddressEntity;
 	}

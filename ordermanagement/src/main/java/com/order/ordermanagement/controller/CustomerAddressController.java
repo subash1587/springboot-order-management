@@ -45,14 +45,9 @@ public class CustomerAddressController {
 	}
 	
 	@RequestMapping(path="/customer-address/{customerId}", method=RequestMethod.DELETE)
-	public ResponseEntity<?> deleteCustomerAddressByType(@PathVariable("customerId") int customerId, @RequestParam String addressType){
-		customerAddressService.deleteCustomerAddressByType(customerId, addressType);
+	public ResponseEntity<?> deleteCustomerAddress(@PathVariable("customerId") int customerId, @RequestParam(required = false) String addressType){
+		customerAddressService.deleteCustomerAddress(customerId, addressType);
 		return ResponseEntity.ok().build();
 	}
-	
-//	@RequestMapping(path="/customer-address/{customerId}", method=RequestMethod.DELETE)
-//	public ResponseEntity<?> deleteCustomerAddressByCustomer(@PathVariable("customerId") int customerId){
-//		customerAddressService.deleteCustomerAddressByCustomer(customerId);
-//		return ResponseEntity.ok().build();
-//	}
+
 }

@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.order.ordermanagement.common.exception.ApiException;
+import com.order.ordermanagement.common.exception.CustomerAddressError;
+import com.order.ordermanagement.common.exception.CustomerError;
 import com.order.ordermanagement.entity.CustomerAddressEntity;
 import com.order.ordermanagement.entity.CustomerEntity;
 import com.order.ordermanagement.mapper.CustomerAddressMapper;
@@ -35,47 +37,54 @@ public class CustomerAddressService {
 	}
 
 	public List<CustomerAddressModel> getCustomerAddress(int customerId) {
-		CustomerEntity customerEntity = new CustomerEntity();
-		customerEntity.setId(customerId);
+		CustomerEntity customerEntity = customerRepo.findById(customerId)
+				.orElseThrow(()-> new ApiException(CustomerError.CUSTOMER_NOT_FOUND));
 		List<CustomerAddressEntity> customerAddressList = customerAddressRepo.findByCustomerEntity(customerEntity);
 		if(customerAddressList.size() == 0) {
-			throw new ApiException(404,"NotFound","No address is found for the customer","Validation Error");
+			throw new ApiException(CustomerAddressError.CUSTOMER_ADDRESS_NOT_FOUND);
 		}
 		return customerAddressMapper.convertCustomerAddressEntityListToCustomerAddressModelList(customerAddressList);
 	}
 	
 	public void updateCustomerAddress(int customerId, String addressType, CustomerAddressModel customerAddressModel) {
 		CustomerEntity customerEntity = customerRepo.findById(customerId)
-				.orElseThrow(()-> new ApiException(404,"NotFound","Customer is not found","Validation Error"));
-		//CustomerEntity customerEntity = new CustomerEntity();
-		//customerEntity.setId(customerId);
+				.orElseThrow(()-> new ApiException(CustomerError.CUSTOMER_NOT_FOUND));
 		CustomerAddressEntity customerAddressEntity	= customerAddressRepo.findByCustomerEntityAndAddressType(customerEntity, addressType);
 		if(customerAddressEntity.getId() > 0) {
 			customerAddressRepo.save(customerAddressMapper.mapCustomerAddressModelToCustomerAddressEntity(customerAddressModel, customerAddressEntity));
 		}else {
-			throw new ApiException(404,"NotFound","Customer Address type is not found","Validation Error");
+			throw new ApiException(CustomerAddressError.CUSTOMER_ADDRESS_TYPE_NOT_FOUND);
 		}
 	}
 
-	public void deleteCustomerAddressByType(int customerId, String addressType) {
+	public void deleteCustomerAddress(int customerId, String addressType) {
 		CustomerEntity customerEntity = customerRepo.findById(customerId)
-				.orElseThrow(()-> new ApiException(404,"NotFound","Customer is not found","Validation Error"));
-		CustomerAddressEntity customerAddressEntity	= customerAddressRepo.findByCustomerEntityAndAddressType(customerEntity, addressType);
-		if(customerAddressEntity.getId() > 0) {
-			customerAddressRepo.deleteById(customerAddressEntity.getId());
+				.orElseThrow(()-> new ApiException(CustomerError.CUSTOMER_NOT_FOUND));
+		if(addressType == null) {
+			List<CustomerAddressEntity> customerAddressList	= customerAddressRepo.findByCustomerEntity(customerEntity);
+			if(customerAddressList.size() > 0) {
+				customerAddressRepo.deleteByCustomerId(customerEntity.getId());
+			}else {
+				throw new ApiException(CustomerAddressError.CUSTOMER_ADDRESS_NOT_FOUND);
+			}
 		}else {
-			throw new ApiException(404,"NotFound","Customer Address type is not found","Validation Error");
+			CustomerAddressEntity customerAddressEntity	= customerAddressRepo.findByCustomerEntityAndAddressType(customerEntity, addressType);
+			if(customerAddressEntity != null) {
+				customerAddressRepo.deleteById(customerAddressEntity.getId());
+			}else {
+				throw new ApiException(CustomerAddressError.CUSTOMER_ADDRESS_TYPE_NOT_FOUND);
+			}
 		}
 	}
 
 	public void deleteCustomerAddressByCustomer(int customerId) {
 		CustomerEntity customerEntity = customerRepo.findById(customerId)
-				.orElseThrow(()-> new ApiException(404,"NotFound","Customer is not found","Validation Error"));
+				.orElseThrow(()-> new ApiException(CustomerError.CUSTOMER_NOT_FOUND));
 		List<CustomerAddressEntity> customerAddressList	= customerAddressRepo.findByCustomerEntity(customerEntity);
 		if(customerAddressList.size() > 0) {
 			customerAddressRepo.deleteById(customerAddressList.get(0).getId());
 		}else {
-			throw new ApiException(404,"NotFound","No address is found for the customer","Validation Error");
+			throw new ApiException(CustomerAddressError.CUSTOMER_ADDRESS_NOT_FOUND);
 		}		
 	}
 }

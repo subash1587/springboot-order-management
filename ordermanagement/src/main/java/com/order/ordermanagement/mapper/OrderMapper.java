@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.order.ordermanagement.common.exception.ApiException;
+import com.order.ordermanagement.common.exception.CustomerError;
 import com.order.ordermanagement.entity.CustomerEntity;
 import com.order.ordermanagement.entity.OrderEntity;
 import com.order.ordermanagement.entity.OrderItemEntity;
@@ -36,6 +37,8 @@ public class OrderMapper {
 		orderModel.setOrderItemList(orderItemModelList);
 		orderModel.setStatus(orderEntity.getStatus());
 		orderModel.setOrderDate(orderEntity.getOrderDate());
+		orderModel.setAcceptedDate(orderEntity.getAcceptedDate());
+		orderModel.setPackagedDate(orderEntity.getPackagedDate());
 		orderModel.setShippedDate(orderEntity.getShippedDate());
 		orderModel.setEstimatedDeliveryDate(orderEntity.getEstimatedDeliveryDate());
 		orderModel.setActualDeliveryDate(orderEntity.getActualDeliveryDate());
@@ -46,7 +49,7 @@ public class OrderMapper {
 	public OrderEntity convertOrderModelToOrderEntity(OrderModel orderModel) {
 		int customerId= orderModel.getCustomerId();
 		CustomerEntity customerEntity = customerRepo.findById(customerId)
-				.orElseThrow(()-> new ApiException(404,"Not Found","Customer is not found","Validation Error"));
+				.orElseThrow(()-> new ApiException(CustomerError.CUSTOMER_NOT_FOUND));
 		OrderEntity orderEntity = new OrderEntity();
 		List<OrderItemEntity> orderItemEntityList = orderItemMapper.convertOrderModelToOrderItemEntity(orderModel, orderEntity);
 		orderEntity.setCustomerEntity(customerEntity);		
@@ -54,18 +57,6 @@ public class OrderMapper {
 		orderEntity.setOrderDate(LocalDate.now());
 		orderEntity.setEstimatedDeliveryDate(LocalDate.now().plusDays(3));
 		orderEntity.setStatus("ordered");
-		return orderEntity;
-	}
-
-	public OrderEntity updateOrderEntity(OrderEntity orderEntity, String status) {
-		orderEntity.setStatus(status);
-		if(status.equals("shipped")) {
-			orderEntity.setShippedDate(LocalDate.now());
-		}else if(status.equals("delivered")) {
-			orderEntity.setActualDeliveryDate(LocalDate.now());
-		}else if(status.equals("cancelled")) {
-			orderEntity.setCancelledDate(LocalDate.now());
-		}
 		return orderEntity;
 	}
 

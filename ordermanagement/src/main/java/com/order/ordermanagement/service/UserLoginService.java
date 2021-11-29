@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.order.ordermanagement.common.exception.ApiException;
+import com.order.ordermanagement.common.exception.UserError;
 import com.order.ordermanagement.entity.UserLoginEntity;
 import com.order.ordermanagement.mapper.UserLoginMapper;
 import com.order.ordermanagement.model.UserLoginModel;
@@ -20,8 +22,13 @@ public class UserLoginService {
 	UserLoginRepo userLoginRepo;
 
 	public void addUser(UserLoginModel userLoginModel) {
-		UserLoginEntity userLoginEntity = userLoginMapper.convertUserLoginModelToUserLoginEntity(userLoginModel);
-		userLoginRepo.save(userLoginEntity);
+		
+		UserLoginEntity userLoginEntity = userLoginRepo.findByUserName(userLoginModel.getUserName());
+		if(userLoginEntity == null) {
+			userLoginRepo.save(userLoginMapper.convertUserLoginModelToUserLoginEntity(userLoginModel));
+		}else {
+			throw new ApiException(UserError.USER_EXISTS);
+		}
 	}
 
 	public List<UserLoginModel> getAllUser() {

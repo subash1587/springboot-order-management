@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.order.ordermanagement.common.exception.ApiError;
 import com.order.ordermanagement.common.exception.ApiException;
+import com.order.ordermanagement.common.exception.AppError;
 
 @ControllerAdvice
 public class ApiExceptionHandler {
@@ -17,12 +17,11 @@ public class ApiExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
 	public ResponseEntity<?> sendError(ApiException ex) {
-		ApiError error = new ApiError();
+		AppError error = new AppError();
 		error.setErrorCode(ex.getErrorCode());
 		error.setErrorMessage(ex.getErrorMessage());
 		error.setErrorType(ex.getErrorType());
 		error.setHttpStatus(ex.getHttpStatus());
 		return ResponseEntity.ok(error);
 	}
-
 }

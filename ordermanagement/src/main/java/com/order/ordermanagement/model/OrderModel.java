@@ -8,6 +8,8 @@ public class OrderModel {
 	private int id;
 	private String status;
 	private LocalDate orderDate;
+	private LocalDate acceptedDate;
+	private LocalDate packagedDate;
 	private LocalDate shippedDate;
 	private LocalDate estimatedDeliveryDate;
 	private LocalDate actualDeliveryDate;
@@ -68,5 +70,17 @@ public class OrderModel {
 	}
 	public void setCancelledDate(LocalDate cancelledDate) {
 		this.cancelledDate = cancelledDate;
+	}
+	public LocalDate getAcceptedDate() {
+		return acceptedDate;
+	}
+	public void setAcceptedDate(LocalDate acceptedDate) {
+		this.acceptedDate = acceptedDate;
+	}
+	public LocalDate getPackagedDate() {
+		return packagedDate;
+	}
+	public void setPackagedDate(LocalDate packagedDate) {
+		this.packagedDate = packagedDate;
 	}
 }

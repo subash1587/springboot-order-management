@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.order.ordermanagement.common.exception.ApiException;
+import com.order.ordermanagement.common.exception.ItemError;
 import com.order.ordermanagement.entity.ItemEntity;
 import com.order.ordermanagement.entity.OrderEntity;
 import com.order.ordermanagement.entity.OrderItemEntity;
@@ -26,7 +27,7 @@ public class OrderItemMapper {
 		for(OrderItemModel orderItem : orderItemModelList) {
 			OrderItemEntity orderItemEntity = new OrderItemEntity();
 			ItemEntity item = itemRepo.findById(orderItem.getItemId())
-					.orElseThrow(()-> new ApiException(404,"NotFound", "Item not found", "Validation Error"));
+					.orElseThrow(()-> new ApiException(ItemError.ITEM_NOT_FOUND));
 			orderItemEntity.setOrder(orderEntity);
 			orderItemEntity.setItem(item);
 			orderItemEntity.setItemCount(orderItem.getItemCount());

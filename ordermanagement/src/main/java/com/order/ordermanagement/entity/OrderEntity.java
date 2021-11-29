@@ -25,13 +25,17 @@ public class OrderEntity {
 	private String status;
 	@Column(name="order_date")
 	private LocalDate orderDate;
+	@Column(name="accepted_date")
+	private LocalDate acceptedDate;
+	@Column(name="packaged_date")
+	private LocalDate packagedDate;
 	@Column(name="shipped_date")
 	private LocalDate shippedDate;
 	@Column(name="estimated_delivery_date")
 	private LocalDate estimatedDeliveryDate;
 	@Column(name="actual_delivery_date")
 	private LocalDate actualDeliveryDate;
-	@Column
+	@Column(name="cancelled_date")
 	private LocalDate cancelledDate;
 	
 	@ManyToOne
@@ -94,5 +98,17 @@ public class OrderEntity {
 	}
 	public void setCancelledDate(LocalDate cancelledDate) {
 		this.cancelledDate = cancelledDate;
+	}
+	public LocalDate getAcceptedDate() {
+		return acceptedDate;
+	}
+	public void setAcceptedDate(LocalDate acceptedDate) {
+		this.acceptedDate = acceptedDate;
+	}
+	public LocalDate getPackagedDate() {
+		return packagedDate;
+	}
+	public void setPackagedDate(LocalDate packagedDate) {
+		this.packagedDate = packagedDate;
 	}
 }
