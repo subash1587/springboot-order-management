@@ -14,6 +14,7 @@ import com.order.ordermanagement.entity.OrderEntity;
 import com.order.ordermanagement.entity.OrderItemEntity;
 import com.order.ordermanagement.model.OrderItemModel;
 import com.order.ordermanagement.model.OrderModel;
+import com.order.ordermanagement.model.custom.OrderStatus;
 import com.order.ordermanagement.repo.CustomerRepo;
 
 @Component
@@ -56,7 +57,7 @@ public class OrderMapper {
 		orderEntity.setOrderItemList(orderItemEntityList);
 		orderEntity.setOrderDate(LocalDate.now());
 		orderEntity.setEstimatedDeliveryDate(LocalDate.now().plusDays(3));
-		orderEntity.setStatus("ordered");
+		orderEntity.setStatus(OrderStatus.ORDERED);
 		return orderEntity;
 	}
 

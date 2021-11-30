@@ -14,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.order.ordermanagement.model.custom.OrderStatus;
+
 @Entity
 @Table(name="user_order")
 public class OrderEntity {
@@ -90,8 +92,8 @@ public class OrderEntity {
 	public String getStatus() {
 		return status;
 	}
-	public void setStatus(String status) {
-		this.status = status;
+	public void setStatus(OrderStatus status) {
+		this.status = status.getStatus();
 	}
 	public LocalDate getCancelledDate() {
 		return cancelledDate;

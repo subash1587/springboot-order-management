@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.order.ordermanagement.model.OrderModel;
+import com.order.ordermanagement.model.custom.OrderStatus;
 import com.order.ordermanagement.service.OrderService;
 
 @RestController
@@ -57,7 +58,7 @@ public class OrderController {
 	}
 	
 	@RequestMapping(path="/order/{id}", method=RequestMethod.PATCH)
-	public ResponseEntity<?> updateOrder(@PathVariable int id, @RequestParam("status") String status){
+	public ResponseEntity<?> updateOrder(@PathVariable int id, @RequestParam("status") OrderStatus status){
 		orderService.updateOrder(id, status);
 		return ResponseEntity.ok().build();
 	}

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.order.ordermanagement.common.exception.ApiException;
 import com.order.ordermanagement.common.exception.OrderError;
+import com.order.ordermanagement.model.custom.OrderStatus;
 import com.order.ordermanagement.entity.CustomerEntity;
 import com.order.ordermanagement.entity.OrderEntity;
 import com.order.ordermanagement.mapper.CustomerMapper;
@@ -86,48 +87,48 @@ public class OrderService {
 		return orderModelList;
 	}
 
-	public void updateOrder(int id, String status) {
+	public void updateOrder(int id, OrderStatus status) {
 		OrderEntity orderEntity = orderRepo.findById(id)
 				.orElseThrow(()-> new ApiException(OrderError.ORDER_NOT_FOUND));
 		String orderStatus = orderEntity.getStatus();
 		switch(status) {
-			case "ordered":
+			case ORDERED:
 				throw new ApiException(OrderError.ORDER_STATUS_ERROR);
-			case "accepted":
+			case ACCEPTED:
 				if(orderStatus.equals("ordered")) {
-					orderEntity.setStatus(status);
+					orderEntity.setStatus(OrderStatus.ACCEPTED);
 					orderEntity.setAcceptedDate(LocalDate.now());
 				}else {
 					throw new ApiException(OrderError.ORDER_STATUS_ERROR);
 				}
 				break;
-			case "packaged":
+			case PACKAGED:
 				if(orderStatus.equals("accepted")) {
-					orderEntity.setStatus(status);
+					orderEntity.setStatus(OrderStatus.PACKAGED);
 					orderEntity.setPackagedDate(LocalDate.now());
 				}else {
 					throw new ApiException(OrderError.ORDER_STATUS_ERROR);
 				}
 				break;
-			case "cancelled":
+			case CANCELLED:
 				if(!(orderStatus.equals("shipped")||orderStatus.equals("delivered"))) {
-					orderEntity.setStatus(status);
+					orderEntity.setStatus(OrderStatus.CANCELLED);
 					orderEntity.setCancelledDate(LocalDate.now());
 				}else {
 					throw new ApiException(OrderError.ORDER_STATUS_ERROR);
 				}
 				break;
-			case "shipped":
+			case SHIPPED:
 				if(orderStatus.equals("packaged")) {
-					orderEntity.setStatus(status);
+					orderEntity.setStatus(OrderStatus.SHIPPED);
 					orderEntity.setShippedDate(LocalDate.now());
 				}else {
 					throw new ApiException(OrderError.ORDER_STATUS_ERROR);
 				}
 				break;
-			case "delivered":
+			case DELIVERED:
 				if(orderStatus.equals("shipped")) {
-					orderEntity.setStatus(status);
+					orderEntity.setStatus(OrderStatus.DELIVERED);
 					orderEntity.setActualDeliveryDate(LocalDate.now());
 				}else {
 					throw new ApiException(OrderError.ORDER_STATUS_ERROR);
