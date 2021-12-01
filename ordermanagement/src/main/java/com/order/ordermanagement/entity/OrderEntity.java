@@ -23,8 +23,7 @@ public class OrderEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
 	private int id;
-	@Column
-	private String status;
+	private OrderStatus status;
 	@Column(name="order_date")
 	private LocalDate orderDate;
 	@Column(name="accepted_date")
@@ -89,11 +88,11 @@ public class OrderEntity {
 	public void setActualDeliveryDate(LocalDate actualDeliveryDate) {
 		this.actualDeliveryDate = actualDeliveryDate;
 	}
-	public String getStatus() {
+	public OrderStatus getStatus() {
 		return status;
 	}
 	public void setStatus(OrderStatus status) {
-		this.status = status.getStatus();
+		this.status = status;
 	}
 	public LocalDate getCancelledDate() {
 		return cancelledDate;

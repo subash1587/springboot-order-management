@@ -6,12 +6,12 @@ public enum OrderStatus {
 	ACCEPTED("accepted"),
 	PACKAGED("packaged"),
 	SHIPPED("shipped"),
-	DELIVERED("shipped"),
+	DELIVERED("delivered"),
 	CANCELLED("cancelled");
 	
 	private String status;
 	
-	OrderStatus(String status){
+	private OrderStatus(String status){
 		this.status = status;
 	}
 

@@ -90,12 +90,12 @@ public class OrderService {
 	public void updateOrder(int id, OrderStatus status) {
 		OrderEntity orderEntity = orderRepo.findById(id)
 				.orElseThrow(()-> new ApiException(OrderError.ORDER_NOT_FOUND));
-		String orderStatus = orderEntity.getStatus();
+		OrderStatus orderStatus = orderEntity.getStatus();
 		switch(status) {
 			case ORDERED:
 				throw new ApiException(OrderError.ORDER_STATUS_ERROR);
 			case ACCEPTED:
-				if(orderStatus.equals("ordered")) {
+				if(orderStatus.equals(OrderStatus.ORDERED)) {
 					orderEntity.setStatus(OrderStatus.ACCEPTED);
 					orderEntity.setAcceptedDate(LocalDate.now());
 				}else {
@@ -103,7 +103,7 @@ public class OrderService {
 				}
 				break;
 			case PACKAGED:
-				if(orderStatus.equals("accepted")) {
+				if(orderStatus.equals(OrderStatus.ACCEPTED)) {
 					orderEntity.setStatus(OrderStatus.PACKAGED);
 					orderEntity.setPackagedDate(LocalDate.now());
 				}else {
@@ -111,7 +111,7 @@ public class OrderService {
 				}
 				break;
 			case CANCELLED:
-				if(!(orderStatus.equals("shipped")||orderStatus.equals("delivered"))) {
+				if(!(orderStatus.equals(OrderStatus.PACKAGED)||orderStatus.equals(OrderStatus.SHIPPED)||orderStatus.equals(OrderStatus.DELIVERED))) {
 					orderEntity.setStatus(OrderStatus.CANCELLED);
 					orderEntity.setCancelledDate(LocalDate.now());
 				}else {
@@ -119,7 +119,7 @@ public class OrderService {
 				}
 				break;
 			case SHIPPED:
-				if(orderStatus.equals("packaged")) {
+				if(orderStatus.equals(OrderStatus.PACKAGED)) {
 					orderEntity.setStatus(OrderStatus.SHIPPED);
 					orderEntity.setShippedDate(LocalDate.now());
 				}else {
@@ -127,7 +127,7 @@ public class OrderService {
 				}
 				break;
 			case DELIVERED:
-				if(orderStatus.equals("shipped")) {
+				if(orderStatus.equals(OrderStatus.SHIPPED)) {
 					orderEntity.setStatus(OrderStatus.DELIVERED);
 					orderEntity.setActualDeliveryDate(LocalDate.now());
 				}else {

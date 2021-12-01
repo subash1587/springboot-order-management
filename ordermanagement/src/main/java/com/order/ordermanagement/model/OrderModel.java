@@ -3,10 +3,12 @@ package com.order.ordermanagement.model;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.order.ordermanagement.model.custom.OrderStatus;
+
 public class OrderModel {
 
 	private int id;
-	private String status;
+	private OrderStatus status;
 	private LocalDate orderDate;
 	private LocalDate acceptedDate;
 	private LocalDate packagedDate;
@@ -59,10 +61,10 @@ public class OrderModel {
 	public void setActualDeliveryDate(LocalDate actualDeliveryDate) {
 		this.actualDeliveryDate = actualDeliveryDate;
 	}
-	public String getStatus() {
+	public OrderStatus getStatus() {
 		return status;
 	}
-	public void setStatus(String status) {
+	public void setStatus(OrderStatus status) {
 		this.status = status;
 	}
 	public LocalDate getCancelledDate() {
