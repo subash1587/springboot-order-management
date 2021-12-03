@@ -15,7 +15,7 @@ public class CustomerMapper {
 		CustomerEntity customerEntity = new CustomerEntity();
 		customerEntity.setId(customerModel.getId());
 		customerEntity.setName(customerModel.getName());
-		customerEntity.setAddress(customerModel.getAddress());
+		customerEntity.setEmail(customerModel.getEmail());
 		return customerEntity;
 	}
 	
@@ -23,13 +23,17 @@ public class CustomerMapper {
 		CustomerModel customerModel = new CustomerModel();
 		customerModel.setId(customerEntity.getId());
 		customerModel.setName(customerEntity.getName());
-		customerModel.setAddress(customerEntity.getAddress());
+		customerModel.setEmail(customerEntity.getEmail());
 		return customerModel;
 	}
 
 	public CustomerEntity mapCustomerModelToCustomerEntity(CustomerEntity customerEntity, CustomerModel customerModel) {
-		customerEntity.setAddress(customerModel.getAddress());
-		customerEntity.setName(customerModel.getName());
+		if(customerModel.getName() != null) {
+			customerEntity.setName(customerModel.getName());
+		}
+		if(customerModel.getEmail() != null) {
+			customerEntity.setEmail(customerModel.getEmail());
+		}
 		return customerEntity;
 	}
 	

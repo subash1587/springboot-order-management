@@ -11,13 +11,13 @@ import com.order.ordermanagement.model.custom.CustomerCountPerCity;
 
 public interface CustomerRepo extends JpaRepository<CustomerEntity, Integer>{
 
-	List<CustomerEntity> findAllByAddress(String address);
-	
 	@Query(value="select u from CustomerEntity u")
 	List<CustomerEntity> findAllCustomers(Sort sort);
 	
-	@Query("select c.address as city, count(c.id) as totalCustomer "
-			+ "from CustomerEntity c group by c.address")
+	@Query(value="select ca.city as city, count(c.id) as total\r\n"
+			+ "from customer c, customer_address ca\r\n"
+			+ "where c.id = ca.customer_id\r\n"
+			+ "group by ca.city", nativeQuery=true)
 	List<CustomerCountPerCity> findCustomerCountPerCity();
 
 }

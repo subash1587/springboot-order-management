@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.order.ordermanagement.model.UserLoginModel;
@@ -39,8 +40,8 @@ public class UserLoginController {
 		return ResponseEntity.ok().build();
 	}
 	
-	@RequestMapping(path="/user/{id}", method=RequestMethod.DELETE)
-	public ResponseEntity<?> deleteUserById(@PathVariable("id") int id){
+	@RequestMapping(path="/user", method=RequestMethod.DELETE)
+	public ResponseEntity<?> deleteUserById(@RequestParam("id")int id){
 		userLoginService.deleteUserById(id);
 		return ResponseEntity.ok().build();
 	}

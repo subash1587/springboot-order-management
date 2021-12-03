@@ -27,7 +27,7 @@ public class UserLoginService {
 		if(userLoginEntity == null) {
 			userLoginRepo.save(userLoginMapper.convertUserLoginModelToUserLoginEntity(userLoginModel));
 		}else {
-			throw new ApiException(UserError.USER_EXISTS);
+			throw new ApiException(UserError.USERNAME_EXISTS);
 		}
 	}
 
@@ -37,18 +37,25 @@ public class UserLoginService {
 	}
 
 	public UserLoginModel getUserByID(int id) {
-		UserLoginEntity userLoginEntity = userLoginRepo.findById(id).orElseThrow();
+		UserLoginEntity userLoginEntity = userLoginRepo.findById(id)
+				.orElseThrow(()-> new ApiException(UserError.USER_NOT_FOUND));
 		return userLoginMapper.convertUserLoginEntityToUserLoginModel(userLoginEntity);
 	}
 
 	public void deleteUserById(int id) {
+		userLoginRepo.findById(id).orElseThrow(()-> new ApiException(UserError.USER_NOT_FOUND));
 		userLoginRepo.deleteById(id);
 	}
 
 	public void updateUser(int id, UserLoginModel userLoginModel) {
-		UserLoginEntity userLoginEntity = userLoginRepo.findById(id).orElseThrow();
+		UserLoginEntity userLoginEntity = userLoginRepo.findById(id)
+				.orElseThrow(()-> new ApiException(UserError.USER_NOT_FOUND));
 		if(!(userLoginEntity.getUserName().equals(userLoginModel.getUserName()))){
-			userLoginEntity.setUserName(userLoginModel.getUserName());
+			if(userLoginRepo.findByUserName(userLoginModel.getUserName()) == null){
+				userLoginEntity.setUserName(userLoginModel.getUserName());
+			}else {
+				throw new ApiException(UserError.USERNAME_EXISTS);
+			}
 		}
 		if(!(userLoginEntity.getPassword().equals(userLoginModel.getPassword()))){
 			userLoginEntity.setPassword(userLoginModel.getPassword());

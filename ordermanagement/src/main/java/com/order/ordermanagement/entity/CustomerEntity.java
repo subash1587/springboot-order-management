@@ -21,7 +21,7 @@ public class CustomerEntity {
 	@Column
 	private String name;
 	@Column
-	private String address;
+	private String email;
 	
 	@OneToMany(mappedBy="customerEntity")
 	private List<OrderEntity> orderList;
@@ -41,11 +41,11 @@ public class CustomerEntity {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getAddress() {
-		return address;
+	public String getEmail() {
+		return email;
 	}
-	public void setAddress(String address) {
-		this.address = address;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	
 }

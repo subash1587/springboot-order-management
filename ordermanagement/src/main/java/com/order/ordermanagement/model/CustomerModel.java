@@ -1,13 +1,11 @@
 package com.order.ordermanagement.model;
 
-import java.util.List;
-
 public class CustomerModel {
 
 	private int id;
 	private String name;
-	private String address;
-	private List<OrderModel> orderModelList;
+	private String email;
+	
 	public int getId() {
 		return id;
 	}
@@ -20,11 +18,11 @@ public class CustomerModel {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getAddress() {
-		return address;
+	public String getEmail() {
+		return email;
 	}
-	public void setAddress(String address) {
-		this.address = address;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 		
 }
