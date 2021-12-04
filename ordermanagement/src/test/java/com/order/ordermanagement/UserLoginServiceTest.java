@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -100,14 +101,14 @@ public class UserLoginServiceTest {
 		userModel.setRole("admin");
 		userModel.setToken("a1b2c3d4e5");
 		
-		Mockito.when(userLoginRepo.findById(2)).thenReturn(user);
+		Mockito.when(userLoginRepo.findById(2)).thenReturn(Optional.of(user));
 		Mockito.when(userLoginMapper.convertUserLoginEntityToUserLoginModel(user)).thenReturn(userModel);
 		
 		userLoginService.getUserByID(2);
 		assertEquals("admin",userModel.getUserName());
 		assertEquals("admin",userModel.getPassword());
 		assertEquals("admin",userModel.getRole());
-		assertEquals("admin",userModel.getToken());
+		assertEquals("a1b2c3d4e5",userModel.getToken());
 
 	}
 	
@@ -143,7 +144,7 @@ public class UserLoginServiceTest {
 		user.setRole("admin");
 		user.setToken("a1b2c3d4e5");
 		
-		Mockito.when(userLoginRepo.findById(2)).thenReturn(user);
+		Mockito.when(userLoginRepo.findById(2)).thenReturn(Optional.of(user));
 		verify(userLoginRepo, times(1)).deleteById(2);
 	}
 
