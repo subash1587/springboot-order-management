@@ -128,8 +128,8 @@ public class UserLoginServiceTest {
 		userModel.setRole("admin");
 		userModel.setToken("a1b2c3d4e5");
 		
+		Mockito.when(userLoginRepo.findById(2)).thenReturn(Optional.of(user));
 		Mockito.when(userLoginRepo.findByUserName(Mockito.any())).thenReturn(null);
-		Mockito.when(userLoginMapper.convertUserLoginModelToUserLoginEntity(userModel)).thenReturn(user);
 		
 		userLoginService.updateUser(2,userModel);
 		verify(userLoginRepo, times(1)).save(user);
@@ -145,6 +145,7 @@ public class UserLoginServiceTest {
 		user.setToken("a1b2c3d4e5");
 		
 		Mockito.when(userLoginRepo.findById(2)).thenReturn(Optional.of(user));
+		userLoginService.deleteUserById(2);
 		verify(userLoginRepo, times(1)).deleteById(2);
 	}
 
