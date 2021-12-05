@@ -27,8 +27,8 @@ public class CustomerController {
 	}
 	
 	@RequestMapping(path="/customer", method=RequestMethod.GET)
-	public ResponseEntity<?> getAllCustomers(){
-		List<CustomerModel> customerModelList = customerService.getAllCustomers();
+	public ResponseEntity<?> getCustomers(@RequestParam("sort_by") String sortBy, @RequestParam("order_by") String orderBy){
+		List<CustomerModel> customerModelList = customerService.getCustomers(sortBy, orderBy);
 		return ResponseEntity.ok(customerModelList);
 	}
 	
@@ -38,21 +38,15 @@ public class CustomerController {
 		return ResponseEntity.ok(customerModel);
 	}
 
-	@RequestMapping(path="/customer?address=city&value=abc", method=RequestMethod.GET)
-	public ResponseEntity<?> getCustomerByAddress(@RequestParam("address") String address, @RequestParam("value") String value){
-		List<CustomerModel> customerModelList = customerService.sortCustomer(address, value);
+	@RequestMapping(path="/customer/search", method=RequestMethod.GET)
+	public ResponseEntity<?> getCustomerByAddress(@RequestParam("parameter") String parameter, @RequestParam("value") String value){
+		List<CustomerModel> customerModelList = customerService.searchCustomer(parameter, value);
 		return ResponseEntity.ok(customerModelList);
 	}
 
 	@RequestMapping(path="/customer/total-customer-per-city", method=RequestMethod.GET)
 	public ResponseEntity<?> getCustomerCount(){
 		return ResponseEntity.ok(customerService.getCustomerCount());
-	}
-
-	@RequestMapping(path="/customer?sort_by=name&order_by=asc", method=RequestMethod.GET)
-	public ResponseEntity<?> sortCustomer(@RequestParam("sort_by") String sortBy, @RequestParam("order_by") String orderBy){
-		List<CustomerModel> customerModelList = customerService.sortCustomer(sortBy, orderBy);
-		return ResponseEntity.ok(customerModelList);
 	}
 
 	@RequestMapping(path="/customer/{id}", method=RequestMethod.PATCH)

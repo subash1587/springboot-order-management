@@ -145,7 +145,7 @@ public class UserLoginServiceTest {
 		user.setToken("a1b2c3d4e5");
 		
 		Mockito.when(userLoginRepo.findById(2)).thenReturn(Optional.of(user));
-		userLoginService.deleteUserById(2);
+		userLoginService.deleteUser("id","2");
 		verify(userLoginRepo, times(1)).deleteById(2);
 	}
 

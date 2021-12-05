@@ -1,18 +1,27 @@
 package com.order.ordermanagement;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.order.ordermanagement.common.exception.ApiException;
+import com.order.ordermanagement.common.exception.OrderError;
 import com.order.ordermanagement.entity.CustomerEntity;
 import com.order.ordermanagement.entity.OrderEntity;
 import com.order.ordermanagement.mapper.OrderMapper;
@@ -76,4 +85,27 @@ public class OrderServiceTest {
 		assertEquals(OrderStatus.SHIPPED, orderList.get(0).getStatus());
 		assertEquals(LocalDate.of(2021, 11, 29), orderList.get(0).getShippedDate());
 	}	
+	
+	@Test
+	public void updateOrderTest() {
+		CustomerEntity customerEntity = new CustomerEntity();
+		customerEntity.setId(7);
+		OrderEntity order = mock(OrderEntity.class);
+		order.setId(31);
+		order.setCustomerEntity(customerEntity);
+		order.setStatus(OrderStatus.SHIPPED);
+		order.setOrderDate(LocalDate.of(2021, 11, 27));
+		order.setAcceptedDate(LocalDate.of(2021, 11, 29));
+		order.setPackagedDate(LocalDate.of(2021, 11, 29));
+		order.setShippedDate(LocalDate.of(2021, 11, 29));
+		order.setEstimatedDeliveryDate(LocalDate.of(2021, 11, 30));
+		order.setActualDeliveryDate(null);
+		order.setCancelledDate(null);
+		
+		Mockito.when(orderRepo.findById(31)).thenReturn(Optional.of(order));
+		when(order.getStatus()!= OrderStatus.SHIPPED).thenThrow(new ApiException(OrderError.ORDER_STATUS_ERROR));
+		orderService.updateOrder(31, OrderStatus.DELIVERED);
+		
+		verify(orderRepo, times(1)).save(order);
+	}
 }

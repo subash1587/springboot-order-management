@@ -11,4 +11,6 @@ public interface UserLoginRepo extends JpaRepository<UserLoginEntity, Integer>{
 	UserLoginEntity findByToken(String token);
 
 	UserLoginEntity findByUserName(String userName);
+
+	void deleteByUserName(String value);
 }

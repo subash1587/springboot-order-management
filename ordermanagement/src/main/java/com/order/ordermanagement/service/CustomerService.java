@@ -31,8 +31,32 @@ public class CustomerService {
 		customerRepo.save(customerEntity);
 	}
 
-	public List<CustomerModel> getAllCustomers() {
-		List<CustomerEntity> customerEntityList = customerRepo.findAll();
+	public List<CustomerModel> getCustomers(String sortBy, String orderBy) {
+		List<CustomerEntity> customerEntityList = new ArrayList<>();
+		if((sortBy != null && orderBy != null) || (sortBy != null && orderBy == null)) {
+			switch (sortBy) {
+			case "name":
+				if (orderBy.equalsIgnoreCase("desc")) {
+					customerEntityList = customerRepo.findAll(Sort.by(Sort.Direction.DESC, sortBy));
+				} else {
+					customerEntityList = customerRepo.findAll(Sort.by(Sort.Direction.ASC, sortBy));
+				}
+				break;
+			case "namelength":
+				customerEntityList = customerRepo.findAllCustomers(JpaSort.unsafe("LENGTH(name)"));
+				break;
+			default:
+				throw new ApiException(CustomerError.CUSTOMER_INVALID_SORT_KEY);
+			}
+		}else if(sortBy == null && orderBy != null) {
+			if (orderBy.equalsIgnoreCase("desc")) {
+				customerEntityList = customerRepo.findAll(Sort.by(Sort.Direction.DESC, sortBy));
+			} else {
+				customerEntityList = customerRepo.findAll(Sort.by(Sort.Direction.ASC, sortBy));
+			}
+		} else {
+			customerEntityList = customerRepo.findAll();
+		}
 		return customerMapper.convertCustomerEntityListToCustomerModelList(customerEntityList);
 	}
 
@@ -40,25 +64,6 @@ public class CustomerService {
 		CustomerEntity customerEntity = customerRepo.findById(id)
 				.orElseThrow(()-> new ApiException(CustomerError.CUSTOMER_NOT_FOUND));
 		return customerMapper.convertCustomerEntityToCustomerModel(customerEntity);
-	}
-
-	public List<CustomerModel> sortCustomer(String sortBy, String orderBy) {
-		List<CustomerEntity> customerEntityList = new ArrayList<>();
-		switch (sortBy) {
-		case "name":
-			if (orderBy.equalsIgnoreCase("desc")) {
-				customerEntityList = customerRepo.findAll(Sort.by(Sort.Direction.DESC, sortBy));
-			}else {
-				customerEntityList = customerRepo.findAll(Sort.by(Sort.Direction.ASC, sortBy));
-			}
-			break;
-		case "namelength":
-			customerEntityList = customerRepo.findAllCustomers(JpaSort.unsafe("LENGTH(name)"));
-			break;
-		default:
-			throw new ApiException(CustomerError.CUSTOMER_INVALID_SORT_KEY);
-		}
-		return customerMapper.convertCustomerEntityListToCustomerModelList(customerEntityList);
 	}
 	
 	public List<CustomerCountPerCity> getCustomerCount() {
@@ -76,5 +81,15 @@ public class CustomerService {
 	public void deleteCustomer(int id) {
 		customerRepo.findById(id).orElseThrow(()-> new ApiException(CustomerError.CUSTOMER_NOT_FOUND));
 		customerRepo.deleteById(id);
+	}
+
+	public List<CustomerModel> searchCustomer(String parameter, String value) {
+		List<CustomerEntity> customerEntityList = new ArrayList<>();
+		if (parameter.equals("city")) {
+			customerEntityList = customerRepo.searchCustomerByCity(value);
+		} else if(parameter.equals("state")) {
+			customerEntityList = customerRepo.searchCustomerByState(value);
+		}
+		return customerMapper.convertCustomerEntityListToCustomerModelList(customerEntityList);
 	}
 }

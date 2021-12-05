@@ -42,9 +42,18 @@ public class UserLoginService {
 		return userLoginMapper.convertUserLoginEntityToUserLoginModel(userLoginEntity);
 	}
 
-	public void deleteUserById(int id) {
-		userLoginRepo.findById(id).orElseThrow(()-> new ApiException(UserError.USER_NOT_FOUND));
-		userLoginRepo.deleteById(id);
+	public void deleteUser(String parameter, String value) {
+		if(parameter.equals("id")) {
+			userLoginRepo.findById(Integer.parseInt(value)).orElseThrow(()-> new ApiException(UserError.USER_NOT_FOUND));
+			userLoginRepo.deleteById(Integer.parseInt(value));
+		}else if(parameter.equals("username")) {
+			userLoginRepo.findByUserName(value);
+			if(userLoginRepo.findByUserName(value) != null){
+				userLoginRepo.deleteByUserName(value);
+			}else {
+				throw new ApiException(UserError.USERNAME_NOT_FOUND);
+			}
+		}
 	}
 
 	public void updateUser(int id, UserLoginModel userLoginModel) {

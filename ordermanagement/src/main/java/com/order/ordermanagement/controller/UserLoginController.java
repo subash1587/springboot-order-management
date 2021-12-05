@@ -41,8 +41,8 @@ public class UserLoginController {
 	}
 	
 	@RequestMapping(path="/user", method=RequestMethod.DELETE)
-	public ResponseEntity<?> deleteUserById(@RequestParam("id")int id){
-		userLoginService.deleteUserById(id);
+	public ResponseEntity<?> deleteUserById(@RequestParam("delete_by")String parameter, @RequestParam("value") String value){
+		userLoginService.deleteUser(parameter, value);
 		return ResponseEntity.ok().build();
 	}
 }

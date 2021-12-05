@@ -2,7 +2,8 @@ package com.order.ordermanagement.common.exception;
 
 public enum UserError implements ApiError{
 	USERNAME_EXISTS(409,"User.Duplicate","UserName already exists","Validation Failure"),
-	USER_NOT_FOUND(401,"User.NotFound","User is not found","Validation Failure");
+	USER_NOT_FOUND(401,"User.NotFound","User is not found","Validation Failure"), 
+	USERNAME_NOT_FOUND(401,"User.NotFound","UserName is not found","Validation Failure");
 	
 	int httpStatus;
 	String errorCode;
