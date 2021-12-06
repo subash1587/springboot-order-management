@@ -13,7 +13,7 @@ public class UserLoginMapper {
 
 	public UserLoginEntity convertUserLoginModelToUserLoginEntity(UserLoginModel userLoginModel) {
 		UserLoginEntity userLoginEntity = new UserLoginEntity();
-		userLoginEntity.setUserName(userLoginModel.getUserName());
+		userLoginEntity.setUsername(userLoginModel.getUsername());
 		userLoginEntity.setPassword(userLoginModel.getPassword());
 		userLoginEntity.setRole(userLoginModel.getRole());
 		userLoginEntity.setToken("a1b2c3d4e5");
@@ -23,7 +23,7 @@ public class UserLoginMapper {
 	public UserLoginModel convertUserLoginEntityToUserLoginModel(UserLoginEntity userLoginEntity) {
 		UserLoginModel userLoginModel = new UserLoginModel();
 		userLoginModel.setId(userLoginEntity.getId());
-		userLoginModel.setUserName(userLoginEntity.getUserName());
+		userLoginModel.setUsername(userLoginEntity.getUsername());
 		userLoginModel.setPassword(userLoginEntity.getPassword());
 		userLoginModel.setRole(userLoginEntity.getRole());
 		return userLoginModel;	

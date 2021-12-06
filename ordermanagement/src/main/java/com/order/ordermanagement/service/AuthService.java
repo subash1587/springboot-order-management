@@ -14,7 +14,7 @@ public class AuthService {
 	UserLoginRepo userLoginRepo;
 
 	public String login(UserLoginModel userLoginModel) {
-		UserLoginEntity userLoginEntity = userLoginRepo.findByUserNameAndPassword(userLoginModel.getUserName(), userLoginModel.getPassword());
+		UserLoginEntity userLoginEntity = userLoginRepo.findByUsernameAndPassword(userLoginModel.getUsername(), userLoginModel.getPassword());
 		return userLoginEntity.getToken();
 	}
 

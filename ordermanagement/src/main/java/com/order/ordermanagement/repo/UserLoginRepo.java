@@ -1,16 +1,19 @@
 package com.order.ordermanagement.repo;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.order.ordermanagement.entity.UserLoginEntity;
 
 public interface UserLoginRepo extends JpaRepository<UserLoginEntity, Integer>{
 	
-	UserLoginEntity findByUserNameAndPassword(String userName, String password);
+	UserLoginEntity findByUsernameAndPassword(String username, String password);
 
 	UserLoginEntity findByToken(String token);
 
-	UserLoginEntity findByUserName(String userName);
+	UserLoginEntity findByUsername(String username);
 
-	void deleteByUserName(String value);
+	@Transactional
+	void deleteByUsername(String username);
 }

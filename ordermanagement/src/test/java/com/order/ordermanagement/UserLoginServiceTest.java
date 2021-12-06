@@ -37,19 +37,19 @@ public class UserLoginServiceTest {
 	public void addUserTest() {
 		UserLoginEntity user = new UserLoginEntity();
 		user.setId(3);
-		user.setUserName("guest");
+		user.setUsername("guest");
 		user.setPassword("guest");
 		user.setRole("guest");
 		user.setToken("aaa");
 		
 		UserLoginModel userModel = new UserLoginModel();
 		userModel.setId(3);
-		userModel.setUserName("guest");
+		userModel.setUsername("guest");
 		userModel.setPassword("guest");
 		userModel.setRole("guest");
 		userModel.setToken("aaa");
 		
-		Mockito.when(userLoginRepo.findByUserName(Mockito.any())).thenReturn(null);
+		Mockito.when(userLoginRepo.findByUsername(Mockito.any())).thenReturn(null);
 		Mockito.when(userLoginMapper.convertUserLoginModelToUserLoginEntity(userModel)).thenReturn(user);
 		
 		userLoginService.addUser(userModel);
@@ -62,7 +62,7 @@ public class UserLoginServiceTest {
 		List<UserLoginEntity> userList = new ArrayList<>();
 		UserLoginEntity user = new UserLoginEntity();
 		user.setId(2);
-		user.setUserName("admin");
+		user.setUsername("admin");
 		user.setPassword("admin");
 		user.setRole("admin");
 		user.setToken("a1b2c3d4e5");
@@ -71,7 +71,7 @@ public class UserLoginServiceTest {
 		List<UserLoginModel> userModelList = new ArrayList<>();
 		UserLoginModel userModel = new UserLoginModel();
 		userModel.setId(2);
-		userModel.setUserName("admin");
+		userModel.setUsername("admin");
 		userModel.setPassword("admin");
 		userModel.setRole("admin");
 		userModel.setToken("a1b2c3d4e5");
@@ -89,14 +89,14 @@ public class UserLoginServiceTest {
 	public void getUserByIdTest() {
 		UserLoginEntity user = new UserLoginEntity();
 		user.setId(2);
-		user.setUserName("admin");
+		user.setUsername("admin");
 		user.setPassword("admin");
 		user.setRole("admin");
 		user.setToken("a1b2c3d4e5");
 		
 		UserLoginModel userModel = new UserLoginModel();
 		userModel.setId(2);
-		userModel.setUserName("admin");
+		userModel.setUsername("admin");
 		userModel.setPassword("admin");
 		userModel.setRole("admin");
 		userModel.setToken("a1b2c3d4e5");
@@ -105,7 +105,7 @@ public class UserLoginServiceTest {
 		Mockito.when(userLoginMapper.convertUserLoginEntityToUserLoginModel(user)).thenReturn(userModel);
 		
 		userLoginService.getUserByID(2);
-		assertEquals("admin",userModel.getUserName());
+		assertEquals("admin",userModel.getUsername());
 		assertEquals("admin",userModel.getPassword());
 		assertEquals("admin",userModel.getRole());
 		assertEquals("a1b2c3d4e5",userModel.getToken());
@@ -116,20 +116,20 @@ public class UserLoginServiceTest {
 	public void updateUserTest() {
 		UserLoginEntity user = new UserLoginEntity();
 		user.setId(2);
-		user.setUserName("admin1");
+		user.setUsername("admin1");
 		user.setPassword("admin");
 		user.setRole("admin");
 		user.setToken("a1b2c3d4e5");
 		
 		UserLoginModel userModel = new UserLoginModel();
 		userModel.setId(2);
-		userModel.setUserName("admin");
+		userModel.setUsername("admin");
 		userModel.setPassword("admin");
 		userModel.setRole("admin");
 		userModel.setToken("a1b2c3d4e5");
 		
 		Mockito.when(userLoginRepo.findById(2)).thenReturn(Optional.of(user));
-		Mockito.when(userLoginRepo.findByUserName(Mockito.any())).thenReturn(null);
+		Mockito.when(userLoginRepo.findByUsername(Mockito.any())).thenReturn(null);
 		
 		userLoginService.updateUser(2,userModel);
 		verify(userLoginRepo, times(1)).save(user);
@@ -139,7 +139,7 @@ public class UserLoginServiceTest {
 	public void deleteUserTest() {
 		UserLoginEntity user = new UserLoginEntity();
 		user.setId(2);
-		user.setUserName("admin");
+		user.setUsername("admin");
 		user.setPassword("admin");
 		user.setRole("admin");
 		user.setToken("a1b2c3d4e5");

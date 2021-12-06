@@ -86,9 +86,9 @@ public class CustomerService {
 	public List<CustomerModel> searchCustomer(String parameter, String value) {
 		List<CustomerEntity> customerEntityList = new ArrayList<>();
 		if (parameter.equals("city")) {
-			customerEntityList = customerRepo.searchCustomerByCity(value);
+			customerEntityList = customerRepo.findCustomerByCity(value);
 		} else if(parameter.equals("state")) {
-			customerEntityList = customerRepo.searchCustomerByState(value);
+			customerEntityList = customerRepo.findCustomerByState(value);
 		}
 		return customerMapper.convertCustomerEntityListToCustomerModelList(customerEntityList);
 	}

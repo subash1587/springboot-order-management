@@ -23,10 +23,10 @@ public interface CustomerRepo extends JpaRepository<CustomerEntity, Integer>{
 
 	@Query(value="select c from CustomerEntity c join CustomerAddressEntity a "
 			+ "on c.id = a.customerEntity where a.city = :city")
-	List<CustomerEntity> searchCustomerByCity(@Param("city") String city);
+	List<CustomerEntity> findCustomerByCity(@Param("city") String city);
 
 	@Query(value="select c from CustomerEntity c join CustomerAddressEntity a "
 			+ "on c.id = a.customerEntity where a.state = :state")
-	List<CustomerEntity> searchCustomerByState(@Param("state") String state);
+	List<CustomerEntity> findCustomerByState(@Param("state") String state);
 
 }

@@ -27,11 +27,11 @@ public class RequestFilter implements Filter{
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 		String token = req.getHeader("authorization");
-		if(authService.validateToken(token)) {
+		//if(authService.validateToken(token)) {
 			chain.doFilter(request, response);
-		}else {
-			res.sendError(401, "Not Authorized");
-		}
+		//}else {
+		//	res.sendError(401, "Not Authorized");
+		//}
 	}
 
 }
