@@ -27,7 +27,7 @@ public class CustomerController {
 	}
 	
 	@RequestMapping(path="/customer", method=RequestMethod.GET)
-	public ResponseEntity<?> getCustomers(@RequestParam("sort_by") String sortBy, @RequestParam("order_by") String orderBy){
+	public ResponseEntity<?> getCustomers(@RequestParam(name="sort_by", required=false) String sortBy, @RequestParam(name="order_by", required=false) String orderBy){
 		List<CustomerModel> customerModelList = customerService.getCustomers(sortBy, orderBy);
 		return ResponseEntity.ok(customerModelList);
 	}

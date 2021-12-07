@@ -1,27 +1,24 @@
 package com.order.ordermanagement;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.Rule;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.order.ordermanagement.common.exception.ApiException;
-import com.order.ordermanagement.common.exception.OrderError;
 import com.order.ordermanagement.entity.CustomerEntity;
 import com.order.ordermanagement.entity.OrderEntity;
 import com.order.ordermanagement.mapper.OrderMapper;
@@ -87,25 +84,400 @@ public class OrderServiceTest {
 	}	
 	
 	@Test
-	public void updateOrderTest() {
+	public void updateOrderOrderedToAcceptedTest() {
+		CustomerEntity customerEntity = new CustomerEntity();
+		customerEntity.setId(8);
+		OrderEntity order = new OrderEntity();
+		order.setId(33);
+		order.setCustomerEntity(customerEntity);
+		order.setStatus(OrderStatus.ORDERED);
+		order.setOrderDate(LocalDate.of(2021, 11, 27));
+		order.setEstimatedDeliveryDate(LocalDate.of(2021, 11, 30));
+				
+		Mockito.when(orderRepo.findById(33)).thenReturn(Optional.of(order));
+		orderService.updateOrder(33, OrderStatus.ACCEPTED);
+		
+		verify(orderRepo, times(1)).save(order);
+		assertEquals(OrderStatus.ACCEPTED, order.getStatus());
+		assertEquals(order.getAcceptedDate(), LocalDate.now());
+	}
+	
+	@Test
+	public void updateOrderAcceptedToPackagedTest() {
+		CustomerEntity customerEntity = new CustomerEntity();
+		customerEntity.setId(2);
+		OrderEntity order = new OrderEntity();
+		order.setId(36);
+		order.setCustomerEntity(customerEntity);
+		order.setStatus(OrderStatus.ACCEPTED);
+		order.setAcceptedDate(LocalDate.of(2021, 11, 28));
+				
+		Mockito.when(orderRepo.findById(36)).thenReturn(Optional.of(order));
+		orderService.updateOrder(36, OrderStatus.PACKAGED);
+		
+		verify(orderRepo, times(1)).save(order);
+		assertEquals(OrderStatus.PACKAGED, order.getStatus());
+		assertEquals(order.getPackagedDate(), LocalDate.now());
+	}
+	
+	@Test
+	public void updateOrderPackagedToShippedTest() {
+		CustomerEntity customerEntity = new CustomerEntity();
+		customerEntity.setId(5);
+		OrderEntity order = new OrderEntity();
+		order.setId(30);
+		order.setCustomerEntity(customerEntity);
+		order.setStatus(OrderStatus.PACKAGED);
+		order.setPackagedDate(LocalDate.of(2021, 11, 29));
+				
+		Mockito.when(orderRepo.findById(30)).thenReturn(Optional.of(order));
+		orderService.updateOrder(30, OrderStatus.SHIPPED);
+		
+		verify(orderRepo, times(1)).save(order);
+		assertEquals(OrderStatus.SHIPPED, order.getStatus());
+		assertEquals(order.getShippedDate(), LocalDate.now());
+	}
+	
+	@Test
+	public void updateOrderShippedToDeliveredTest() {
 		CustomerEntity customerEntity = new CustomerEntity();
 		customerEntity.setId(7);
-		OrderEntity order = mock(OrderEntity.class);
+		OrderEntity order = new OrderEntity();
 		order.setId(31);
 		order.setCustomerEntity(customerEntity);
 		order.setStatus(OrderStatus.SHIPPED);
-		order.setOrderDate(LocalDate.of(2021, 11, 27));
-		order.setAcceptedDate(LocalDate.of(2021, 11, 29));
-		order.setPackagedDate(LocalDate.of(2021, 11, 29));
 		order.setShippedDate(LocalDate.of(2021, 11, 29));
 		order.setEstimatedDeliveryDate(LocalDate.of(2021, 11, 30));
-		order.setActualDeliveryDate(null);
-		order.setCancelledDate(null);
-		
+				
 		Mockito.when(orderRepo.findById(31)).thenReturn(Optional.of(order));
-		when(order.getStatus()!= OrderStatus.SHIPPED).thenThrow(new ApiException(OrderError.ORDER_STATUS_ERROR));
 		orderService.updateOrder(31, OrderStatus.DELIVERED);
 		
 		verify(orderRepo, times(1)).save(order);
+		assertEquals(OrderStatus.DELIVERED, order.getStatus());
+		assertEquals(order.getActualDeliveryDate(), LocalDate.now());
 	}
+	
+	@Test
+	public void updateOrderOrderedToPackagedTest() {
+		CustomerEntity customerEntity = new CustomerEntity();
+		customerEntity.setId(8);
+		OrderEntity order = new OrderEntity();
+		order.setId(33);
+		order.setCustomerEntity(customerEntity);
+		order.setStatus(OrderStatus.ORDERED);
+		
+		String expectedMessage = "Status cannot be updated";
+		Mockito.when(orderRepo.findById(33)).thenReturn(Optional.of(order));
+		ApiException exception = Assertions.assertThrows(ApiException.class, () -> {
+			orderService.updateOrder(33, OrderStatus.PACKAGED);
+		});		
+		assertTrue(exception.getErrorMessage().equals(expectedMessage));
+	}
+	
+	@Test
+	public void updateOrderOrderedToShippedTest() {
+		CustomerEntity customerEntity = new CustomerEntity();
+		customerEntity.setId(8);
+		OrderEntity order = new OrderEntity();
+		order.setId(33);
+		order.setCustomerEntity(customerEntity);
+		order.setStatus(OrderStatus.ORDERED);
+		
+		String expectedMessage = "Status cannot be updated";
+		Mockito.when(orderRepo.findById(33)).thenReturn(Optional.of(order));
+		ApiException exception = Assertions.assertThrows(ApiException.class, () -> {
+			orderService.updateOrder(33, OrderStatus.SHIPPED);
+		});		
+		assertTrue(exception.getErrorMessage().equals(expectedMessage));
+	}
+	
+	@Test
+	public void updateOrderOrderedToDeliveredTest() {
+		CustomerEntity customerEntity = new CustomerEntity();
+		customerEntity.setId(8);
+		OrderEntity order = new OrderEntity();
+		order.setId(33);
+		order.setCustomerEntity(customerEntity);
+		order.setStatus(OrderStatus.ORDERED);
+		
+		String expectedMessage = "Status cannot be updated";
+		Mockito.when(orderRepo.findById(33)).thenReturn(Optional.of(order));
+		ApiException exception = Assertions.assertThrows(ApiException.class, () -> {
+			orderService.updateOrder(33, OrderStatus.DELIVERED);
+		});		
+		assertTrue(exception.getErrorMessage().equals(expectedMessage));
+	}
+	
+	@Test
+	public void updateOrderAcceptedToOrderedTest() {
+		CustomerEntity customerEntity = new CustomerEntity();
+		customerEntity.setId(2);
+		OrderEntity order = new OrderEntity();
+		order.setId(36);
+		order.setCustomerEntity(customerEntity);
+		order.setStatus(OrderStatus.ACCEPTED);
+		
+		String expectedMessage = "Status cannot be updated";
+		Mockito.when(orderRepo.findById(36)).thenReturn(Optional.of(order));
+		ApiException exception = Assertions.assertThrows(ApiException.class, () -> {
+			orderService.updateOrder(36, OrderStatus.ORDERED);
+		});		
+		assertTrue(exception.getErrorMessage().equals(expectedMessage));
+	}
+	
+	@Test
+	public void updateOrderAcceptedToShippedTest() {
+		CustomerEntity customerEntity = new CustomerEntity();
+		customerEntity.setId(2);
+		OrderEntity order = new OrderEntity();
+		order.setId(36);
+		order.setCustomerEntity(customerEntity);
+		order.setStatus(OrderStatus.ACCEPTED);
+		
+		String expectedMessage = "Status cannot be updated";
+		Mockito.when(orderRepo.findById(36)).thenReturn(Optional.of(order));
+		ApiException exception = Assertions.assertThrows(ApiException.class, () -> {
+			orderService.updateOrder(36, OrderStatus.SHIPPED);
+		});		
+		assertTrue(exception.getErrorMessage().equals(expectedMessage));
+	}
+	
+	@Test
+	public void updateOrderAcceptedToDeliveredTest() {
+		CustomerEntity customerEntity = new CustomerEntity();
+		customerEntity.setId(2);
+		OrderEntity order = new OrderEntity();
+		order.setId(36);
+		order.setCustomerEntity(customerEntity);
+		order.setStatus(OrderStatus.ACCEPTED);
+		
+		String expectedMessage = "Status cannot be updated";
+		Mockito.when(orderRepo.findById(36)).thenReturn(Optional.of(order));
+		ApiException exception = Assertions.assertThrows(ApiException.class, () -> {
+			orderService.updateOrder(36, OrderStatus.DELIVERED);
+		});		
+		assertTrue(exception.getErrorMessage().equals(expectedMessage));
+	}
+	
+	@Test
+	public void updateOrderPackagedToOrderedTest() {
+		CustomerEntity customerEntity = new CustomerEntity();
+		customerEntity.setId(5);
+		OrderEntity order = new OrderEntity();
+		order.setId(30);
+		order.setCustomerEntity(customerEntity);
+		order.setStatus(OrderStatus.PACKAGED);
+		
+		String expectedMessage = "Status cannot be updated";
+		Mockito.when(orderRepo.findById(30)).thenReturn(Optional.of(order));
+		ApiException exception = Assertions.assertThrows(ApiException.class, () -> {
+			orderService.updateOrder(30, OrderStatus.ORDERED);
+		});		
+		assertTrue(exception.getErrorMessage().equals(expectedMessage));
+	}
+	
+	@Test
+	public void updateOrderPackagedToAcceptedTest() {
+		CustomerEntity customerEntity = new CustomerEntity();
+		customerEntity.setId(5);
+		OrderEntity order = new OrderEntity();
+		order.setId(30);
+		order.setCustomerEntity(customerEntity);
+		order.setStatus(OrderStatus.PACKAGED);
+		
+		String expectedMessage = "Status cannot be updated";
+		Mockito.when(orderRepo.findById(30)).thenReturn(Optional.of(order));
+		ApiException exception = Assertions.assertThrows(ApiException.class, () -> {
+			orderService.updateOrder(30, OrderStatus.ACCEPTED);
+		});		
+		assertTrue(exception.getErrorMessage().equals(expectedMessage));
+	}
+	
+	@Test
+	public void updateOrderPackagedToDeliveredTest() {
+		CustomerEntity customerEntity = new CustomerEntity();
+		customerEntity.setId(5);
+		OrderEntity order = new OrderEntity();
+		order.setId(30);
+		order.setCustomerEntity(customerEntity);
+		order.setStatus(OrderStatus.PACKAGED);
+		
+		String expectedMessage = "Status cannot be updated";
+		Mockito.when(orderRepo.findById(30)).thenReturn(Optional.of(order));
+		ApiException exception = Assertions.assertThrows(ApiException.class, () -> {
+			orderService.updateOrder(30, OrderStatus.DELIVERED);
+		});		
+		assertTrue(exception.getErrorMessage().equals(expectedMessage));
+	}
+	
+	@Test
+	public void updateOrderPackagedToCancelledTest() {
+		CustomerEntity customerEntity = new CustomerEntity();
+		customerEntity.setId(5);
+		OrderEntity order = new OrderEntity();
+		order.setId(30);
+		order.setCustomerEntity(customerEntity);
+		order.setStatus(OrderStatus.PACKAGED);
+		
+		String expectedMessage = "Status cannot be updated";
+		Mockito.when(orderRepo.findById(30)).thenReturn(Optional.of(order));
+		ApiException exception = Assertions.assertThrows(ApiException.class, () -> {
+			orderService.updateOrder(30, OrderStatus.CANCELLED);
+		});		
+		assertTrue(exception.getErrorMessage().equals(expectedMessage));
+	}
+	
+	@Test
+	public void updateOrderShippedToOrderedTest() {
+		CustomerEntity customerEntity = new CustomerEntity();
+		customerEntity.setId(7);
+		OrderEntity order = new OrderEntity();
+		order.setId(31);
+		order.setCustomerEntity(customerEntity);
+		order.setStatus(OrderStatus.SHIPPED);
+		
+		String expectedMessage = "Status cannot be updated";
+		Mockito.when(orderRepo.findById(31)).thenReturn(Optional.of(order));
+		ApiException exception = Assertions.assertThrows(ApiException.class, () -> {
+			orderService.updateOrder(31, OrderStatus.ORDERED);
+		});		
+		assertTrue(exception.getErrorMessage().equals(expectedMessage));
+	}
+	
+	@Test
+	public void updateOrderShippedToAcceptedTest() {
+		CustomerEntity customerEntity = new CustomerEntity();
+		customerEntity.setId(7);
+		OrderEntity order = new OrderEntity();
+		order.setId(31);
+		order.setCustomerEntity(customerEntity);
+		order.setStatus(OrderStatus.SHIPPED);
+		
+		String expectedMessage = "Status cannot be updated";
+		Mockito.when(orderRepo.findById(31)).thenReturn(Optional.of(order));
+		ApiException exception = Assertions.assertThrows(ApiException.class, () -> {
+			orderService.updateOrder(31, OrderStatus.ACCEPTED);
+		});		
+		assertTrue(exception.getErrorMessage().equals(expectedMessage));
+	}
+	
+	@Test
+	public void updateOrderShippedToPackagedTest() {
+		CustomerEntity customerEntity = new CustomerEntity();
+		customerEntity.setId(7);
+		OrderEntity order = new OrderEntity();
+		order.setId(31);
+		order.setCustomerEntity(customerEntity);
+		order.setStatus(OrderStatus.SHIPPED);
+		
+		String expectedMessage = "Status cannot be updated";
+		Mockito.when(orderRepo.findById(31)).thenReturn(Optional.of(order));
+		ApiException exception = Assertions.assertThrows(ApiException.class, () -> {
+			orderService.updateOrder(31, OrderStatus.PACKAGED);
+		});		
+		assertTrue(exception.getErrorMessage().equals(expectedMessage));
+	}
+	
+	@Test
+	public void updateOrderShippedToCancelledTest() {
+		CustomerEntity customerEntity = new CustomerEntity();
+		customerEntity.setId(7);
+		OrderEntity order = new OrderEntity();
+		order.setId(31);
+		order.setCustomerEntity(customerEntity);
+		order.setStatus(OrderStatus.SHIPPED);
+		
+		String expectedMessage = "Status cannot be updated";
+		Mockito.when(orderRepo.findById(31)).thenReturn(Optional.of(order));
+		ApiException exception = Assertions.assertThrows(ApiException.class, () -> {
+			orderService.updateOrder(31, OrderStatus.CANCELLED);
+		});		
+		assertTrue(exception.getErrorMessage().equals(expectedMessage));
+	}
+	
+	@Test
+	public void updateOrderDeliveredToOrderedTest() {
+		CustomerEntity customerEntity = new CustomerEntity();
+		customerEntity.setId(5);
+		OrderEntity order = new OrderEntity();
+		order.setId(24);
+		order.setCustomerEntity(customerEntity);
+		order.setStatus(OrderStatus.DELIVERED);
+		
+		String expectedMessage = "Status cannot be updated";
+		Mockito.when(orderRepo.findById(24)).thenReturn(Optional.of(order));
+		ApiException exception = Assertions.assertThrows(ApiException.class, () -> {
+			orderService.updateOrder(24, OrderStatus.ORDERED);
+		});		
+		assertTrue(exception.getErrorMessage().equals(expectedMessage));
+	}
+	
+	@Test
+	public void updateOrderDeliveredToAcceptedTest() {
+		CustomerEntity customerEntity = new CustomerEntity();
+		customerEntity.setId(5);
+		OrderEntity order = new OrderEntity();
+		order.setId(24);
+		order.setCustomerEntity(customerEntity);
+		order.setStatus(OrderStatus.DELIVERED);
+		
+		String expectedMessage = "Status cannot be updated";
+		Mockito.when(orderRepo.findById(24)).thenReturn(Optional.of(order));
+		ApiException exception = Assertions.assertThrows(ApiException.class, () -> {
+			orderService.updateOrder(24, OrderStatus.ACCEPTED);
+		});		
+		assertTrue(exception.getErrorMessage().equals(expectedMessage));
+	}
+	
+	@Test
+	public void updateOrderDeliveredToPackagedTest() {
+		CustomerEntity customerEntity = new CustomerEntity();
+		customerEntity.setId(5);
+		OrderEntity order = new OrderEntity();
+		order.setId(24);
+		order.setCustomerEntity(customerEntity);
+		order.setStatus(OrderStatus.DELIVERED);
+		
+		String expectedMessage = "Status cannot be updated";
+		Mockito.when(orderRepo.findById(24)).thenReturn(Optional.of(order));
+		ApiException exception = Assertions.assertThrows(ApiException.class, () -> {
+			orderService.updateOrder(24, OrderStatus.PACKAGED);
+		});		
+		assertTrue(exception.getErrorMessage().equals(expectedMessage));
+	}
+	
+	@Test
+	public void updateOrderDeliveredToShippedTest() {
+		CustomerEntity customerEntity = new CustomerEntity();
+		customerEntity.setId(5);
+		OrderEntity order = new OrderEntity();
+		order.setId(24);
+		order.setCustomerEntity(customerEntity);
+		order.setStatus(OrderStatus.DELIVERED);
+		
+		String expectedMessage = "Status cannot be updated";
+		Mockito.when(orderRepo.findById(24)).thenReturn(Optional.of(order));
+		ApiException exception = Assertions.assertThrows(ApiException.class, () -> {
+			orderService.updateOrder(24, OrderStatus.SHIPPED);
+		});		
+		assertTrue(exception.getErrorMessage().equals(expectedMessage));
+	}
+	
+	@Test
+	public void updateOrderDeliveredToCancelledTest() {
+		CustomerEntity customerEntity = new CustomerEntity();
+		customerEntity.setId(6);
+		OrderEntity order = new OrderEntity();
+		order.setId(14);
+		order.setCustomerEntity(customerEntity);
+		order.setStatus(OrderStatus.DELIVERED);
+		
+		String expectedMessage = "Status cannot be updated";
+		Mockito.when(orderRepo.findById(14)).thenReturn(Optional.of(order));
+		ApiException exception = Assertions.assertThrows(ApiException.class, () -> {
+			orderService.updateOrder(14, OrderStatus.CANCELLED);
+		});		
+		assertTrue(exception.getErrorMessage().equals(expectedMessage));
+	}
+
 }

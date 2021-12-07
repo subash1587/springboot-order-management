@@ -36,10 +36,10 @@ public class CustomerService {
 		if((sortBy != null && orderBy != null) || (sortBy != null && orderBy == null)) {
 			switch (sortBy) {
 			case "name":
-				if (orderBy.equalsIgnoreCase("desc")) {
-					customerEntityList = customerRepo.findAll(Sort.by(Sort.Direction.DESC, sortBy));
-				} else {
+				if (orderBy == null || orderBy.equalsIgnoreCase("asc")) {
 					customerEntityList = customerRepo.findAll(Sort.by(Sort.Direction.ASC, sortBy));
+				} else {
+					customerEntityList = customerRepo.findAll(Sort.by(Sort.Direction.DESC, sortBy));
 				}
 				break;
 			case "namelength":
@@ -48,12 +48,8 @@ public class CustomerService {
 			default:
 				throw new ApiException(CustomerError.CUSTOMER_INVALID_SORT_KEY);
 			}
-		}else if(sortBy == null && orderBy != null) {
-			if (orderBy.equalsIgnoreCase("desc")) {
-				customerEntityList = customerRepo.findAll(Sort.by(Sort.Direction.DESC, sortBy));
-			} else {
-				customerEntityList = customerRepo.findAll(Sort.by(Sort.Direction.ASC, sortBy));
-			}
+		} else if(sortBy == null && orderBy != null) {
+			throw new ApiException(CustomerError.CUSTOMER_SORTBY_PARAM_MISSING);
 		} else {
 			customerEntityList = customerRepo.findAll();
 		}
