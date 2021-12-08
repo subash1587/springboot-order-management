@@ -44,8 +44,17 @@ public class OrderService {
 		orderRepo.save(orderEntity);
 	}
 	
-	public List<OrderModel> getAllOrder() {
-		List<OrderEntity> orderEntityList = orderRepo.findAll();
+	public List<OrderModel> getOrders(String sortBy, String orderBy) {
+		List<OrderEntity> orderEntityList = new ArrayList<>();
+		if (sortBy == null && orderBy == null) {
+			orderEntityList = orderRepo.findAll();
+		} else if (sortBy != null && orderBy != null) {
+			orderEntityList = orderRepo.sortOrdersByAmount(orderBy);
+		} else if (sortBy != null & orderBy == null) {
+			orderEntityList = orderRepo.sortOrdersByAmount("asc");
+		} else {
+			throw new ApiException(OrderError.ORDER_SORTBY_PARAM_MISSING);
+		}
 		return orderMapper.convertOrderEntityListToOrderModelList(orderEntityList);
 	}
 
@@ -138,5 +147,12 @@ public class OrderService {
 				throw new ApiException(OrderError.ORDER_STATUS_INVALID);
 		}
 		orderRepo.save(orderEntity);
+	}
+
+	public void deleteOrder(int id) {
+		OrderEntity orderEntity = orderRepo.findById(id).orElseThrow(() -> new ApiException(OrderError.ORDER_NOT_FOUND));
+		if (orderEntity != null) {
+			orderRepo.deleteById(id);
+		}
 	}
 }

@@ -3,6 +3,7 @@ package com.order.ordermanagement.common.exception;
 public enum OrderError implements ApiError{
 	
 	ORDER_NOT_FOUND(404, "order.notfound", "Order details not found", "Validation Failure"),
+	ORDER_SORTBY_PARAM_MISSING(404, "Order.ParameterMissing", "SortBy parameter is not sent in request", "Validation Failure"),
 	ORDER_NOT_FOUND_CUSTOMER(404, "order.notfound", "No Orders were found for the customer", "Validation Failure"),
 	ORDER_STATUS_ERROR(400,"Bad Request","Status cannot be updated","Validation Error"),
 	ORDER_STATUS_INVALID(400,"Bad Request","Invalid Status","Validation Error");

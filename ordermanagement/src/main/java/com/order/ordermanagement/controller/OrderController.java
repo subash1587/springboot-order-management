@@ -28,8 +28,8 @@ public class OrderController {
 	}
 	
 	@RequestMapping(path="/order",method=RequestMethod.GET)
-	public ResponseEntity<?> getAllOrder() {
-		List<OrderModel> orderList = orderService.getAllOrder();
+	public ResponseEntity<?> getOrders(@RequestParam(name="sort_by",required=false) String sortBy, @RequestParam(name="order_by",required=false) String orderBy) {
+		List<OrderModel> orderList = orderService.getOrders(sortBy, orderBy);
 		return ResponseEntity.ok(orderList);
 	}
 	
@@ -39,7 +39,7 @@ public class OrderController {
 		return ResponseEntity.ok(orderModel);
 	}
 	
-	@RequestMapping(path="/order/customer/{id}", method=RequestMethod.GET)
+	@RequestMapping(path="/customer/{id}/order", method=RequestMethod.GET)
 	public ResponseEntity<?> getOrdersByCustomer(@PathVariable("id") int id){
 		List<OrderModel> orderList = orderService.getOrdersByCustomer(id);
 		return ResponseEntity.ok(orderList);
@@ -60,6 +60,12 @@ public class OrderController {
 	@RequestMapping(path="/order/{id}", method=RequestMethod.PATCH)
 	public ResponseEntity<?> updateOrder(@PathVariable int id, @RequestParam("status") OrderStatus status){
 		orderService.updateOrder(id, status);
+		return ResponseEntity.ok().build();
+	}
+	
+	@RequestMapping(path="/order/{id}", method=RequestMethod.DELETE)
+	public ResponseEntity<?> deleteOrder(@PathVariable int id){
+		orderService.deleteOrder(id);
 		return ResponseEntity.ok().build();
 	}
 }

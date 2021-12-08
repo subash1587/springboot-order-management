@@ -23,6 +23,11 @@ public interface OrderRepo extends JpaRepository<OrderEntity, Integer>{
 			+ "order by total desc\r\n"
 			+ "limit :limit",nativeQuery = true)
 	int[] findTopOrders(@Param("limit") int limit);
+	
+	@Query(value = "select o.id, sum(i.price) as total "
+			+ "from OrderEntity o join OrderItemEntity oi on o.id = oi.order "
+			+ "join ItemEntity i on oi.item = i.id group by oi.order order by :orderBy")
+	List<OrderEntity> sortOrdersByAmount(@Param("orderBy") String orderBy);
 
 	@Query(value = "select o from OrderEntity o")
 	Page<OrderEntity> findOrdersWithPagination(PageRequest pageRequest);
