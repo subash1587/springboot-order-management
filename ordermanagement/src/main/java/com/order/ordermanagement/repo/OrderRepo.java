@@ -6,30 +6,21 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import com.order.ordermanagement.entity.CustomerEntity;
 import com.order.ordermanagement.entity.OrderEntity;
+import com.order.ordermanagement.model.custom.OrdersWithTotalAmount;
+import com.order.ordermanagement.repo.custom.OrderRepoCustom;
 
-public interface OrderRepo extends JpaRepository<OrderEntity, Integer>{
+public interface OrderRepo extends JpaRepository<OrderEntity, Integer>, OrderRepoCustom{
 
 	List<OrderEntity> findAllByCustomerEntity(CustomerEntity customerEntity);
 	
-	@Query(value = "select oi.order_id, sum(i.price) as total\r\n"
-			+ "from user_order o, item i, order_item oi\r\n"
-			+ "where o.id = oi.order_id\r\n"
-			+ "and i.id = oi.item_id\r\n"
-			+ "group by oi.order_id\r\n"
-			+ "order by total desc\r\n"
-			+ "limit :limit",nativeQuery = true)
-	int[] findTopOrders(@Param("limit") int limit);
-	
-	@Query(value = "select o.id, sum(i.price) as total "
+	@Query(value = "select new com.order.ordermanagement.model.custom.OrdersWithTotalAmount(o.id, o.customerEntity, sum(i.price) as totalAmount) "
 			+ "from OrderEntity o join OrderItemEntity oi on o.id = oi.order "
-			+ "join ItemEntity i on oi.item = i.id group by oi.order order by :orderBy")
-	List<OrderEntity> sortOrdersByAmount(@Param("orderBy") String orderBy);
+			+ "join ItemEntity i on oi.item = i.id group by o.id order by totalAmount")
+	List<OrdersWithTotalAmount> sortOrdersByAmount();
 
 	@Query(value = "select o from OrderEntity o")
 	Page<OrderEntity> findOrdersWithPagination(PageRequest pageRequest);
-
 }

@@ -5,6 +5,9 @@ import java.util.stream.Stream;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
+import org.springframework.stereotype.Component;
+
+@Component
 @Converter(autoApply=true)
 public class OrderStatusConverter implements AttributeConverter<OrderStatus, String>{
 

@@ -3,6 +3,7 @@ package com.order.ordermanagement.service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.order.ordermanagement.common.exception.ApiException;
 import com.order.ordermanagement.common.exception.OrderError;
 import com.order.ordermanagement.model.custom.OrderStatus;
+import com.order.ordermanagement.model.custom.OrdersWithTotalAmount;
 import com.order.ordermanagement.entity.CustomerEntity;
 import com.order.ordermanagement.entity.OrderEntity;
 import com.order.ordermanagement.mapper.CustomerMapper;
@@ -44,16 +46,12 @@ public class OrderService {
 		orderRepo.save(orderEntity);
 	}
 	
-	public List<OrderModel> getOrders(String sortBy, String orderBy) {
+	public List<OrderModel> getOrders(Map<String, String> filters) {
 		List<OrderEntity> orderEntityList = new ArrayList<>();
-		if (sortBy == null && orderBy == null) {
+		if (filters == null) {
 			orderEntityList = orderRepo.findAll();
-		} else if (sortBy != null && orderBy != null) {
-			orderEntityList = orderRepo.sortOrdersByAmount(orderBy);
-		} else if (sortBy != null & orderBy == null) {
-			orderEntityList = orderRepo.sortOrdersByAmount("asc");
 		} else {
-			throw new ApiException(OrderError.ORDER_SORTBY_PARAM_MISSING);
+			orderEntityList = orderRepo.findOrders(filters);
 		}
 		return orderMapper.convertOrderEntityListToOrderModelList(orderEntityList);
 	}
@@ -73,17 +71,10 @@ public class OrderService {
 		}
 		return orderMapper.convertOrderEntityListToOrderModelList(orderEntityList);
 	}
-
-	public List<OrderModel> getTopOrdersBySaleValue() {
-		List<OrderModel> orderModelList = new ArrayList<>();
-		int[] topOrder = orderRepo.findTopOrders(2);
-		for(int i=0; i < topOrder.length; i++) {
-			OrderEntity orderEntity = orderRepo.findById(topOrder[i])
-					.orElseThrow(()-> new ApiException(OrderError.ORDER_NOT_FOUND));
-			OrderModel orderModel = orderMapper.convertOrderEntityToOrderModel(orderEntity);
-			orderModelList.add(orderModel);
-		}
-		return orderModelList;
+	
+	public List<OrdersWithTotalAmount> sortOrdersByAmount() {
+		List<OrdersWithTotalAmount> orderList = orderRepo.sortOrdersByAmount();
+		return orderList;
 	}
 
 	public List<OrderModel> getOrdersWithPagination(int index) {
