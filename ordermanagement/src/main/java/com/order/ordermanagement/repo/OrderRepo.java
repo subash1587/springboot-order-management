@@ -23,4 +23,5 @@ public interface OrderRepo extends JpaRepository<OrderEntity, Integer>, OrderRep
 
 	@Query(value = "select o from OrderEntity o")
 	Page<OrderEntity> findOrdersWithPagination(PageRequest pageRequest);
+
 }

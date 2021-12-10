@@ -46,17 +46,24 @@ public class OrderService {
 		orderRepo.save(orderEntity);
 	}
 	
-	public List<OrderModel> getOrders(Map<String, String> filters) {
+	public List<OrderModel> getOrders(Map<String, String> filters, Integer index) {
 		List<OrderEntity> orderEntityList = new ArrayList<>();
 		if (filters == null) {
 			orderEntityList = orderRepo.findAll();
 		} else {
 			orderEntityList = orderRepo.findOrders(filters);
+		} 
+		if (index != null) {
+			Page<OrderEntity> orderEntityPage = orderRepo.findOrdersWithPagination(PageRequest.of(index.intValue(), 10));
+			orderEntityList.clear();
+			for(OrderEntity order : orderEntityPage) {
+				orderEntityList.add(order);
+			}
 		}
 		return orderMapper.convertOrderEntityListToOrderModelList(orderEntityList);
 	}
 
-	public OrderModel searchOrder(int orderId) {
+	public OrderModel getOrder(int orderId) {
 		OrderEntity orderEntity = orderRepo.findById(orderId)
 				.orElseThrow(()-> new ApiException(OrderError.ORDER_NOT_FOUND));
 		return orderMapper.convertOrderEntityToOrderModel(orderEntity);
@@ -75,16 +82,6 @@ public class OrderService {
 	public List<OrdersWithTotalAmount> sortOrdersByAmount() {
 		List<OrdersWithTotalAmount> orderList = orderRepo.sortOrdersByAmount();
 		return orderList;
-	}
-
-	public List<OrderModel> getOrdersWithPagination(int index) {
-		Page<OrderEntity> orderEntityList = orderRepo.findOrdersWithPagination(PageRequest.of(index, 5));
-		List<OrderModel> orderModelList = new ArrayList<>();
-		for(OrderEntity order : orderEntityList) {
-			OrderModel orderModel = orderMapper.convertOrderEntityToOrderModel(order);
-			orderModelList.add(orderModel);
-		}
-		return orderModelList;
 	}
 
 	public void updateOrder(int id, OrderStatus status) {

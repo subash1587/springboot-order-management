@@ -1,6 +1,5 @@
 package com.order.ordermanagement.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.order.ordermanagement.model.OrderModel;
 import com.order.ordermanagement.model.custom.OrderStatus;
-import com.order.ordermanagement.model.custom.OrdersWithTotalAmount;
 import com.order.ordermanagement.service.OrderService;
 
 @RestController
@@ -30,33 +28,23 @@ public class OrderController {
 	}
 	
 	@RequestMapping(path="/order",method=RequestMethod.GET)
-	public ResponseEntity<?> getOrders(@RequestBody(required=false) Map<String, String> filters ) {
-		List<OrderModel> orderList = orderService.getOrders(filters);
-		return ResponseEntity.ok(orderList);
+	public ResponseEntity<?> getOrders(@RequestBody(required=false) Map<String, String> filters, @RequestParam(name="page",required=false) Integer index) {
+		return ResponseEntity.ok(orderService.getOrders(filters, index));
 	}
 	
 	@RequestMapping(path="/order/{id}", method=RequestMethod.GET)
-	public ResponseEntity<?> searchOrder(@PathVariable int id) {
-		OrderModel orderModel = orderService.searchOrder(id);
-		return ResponseEntity.ok(orderModel);
+	public ResponseEntity<?> getOrder(@PathVariable int id) {
+		return ResponseEntity.ok(orderService.getOrder(id));
 	}
 	
 	@RequestMapping(path="/customer/{id}/order", method=RequestMethod.GET)
 	public ResponseEntity<?> getOrdersByCustomer(@PathVariable("id") int id){
-		List<OrderModel> orderList = orderService.getOrdersByCustomer(id);
-		return ResponseEntity.ok(orderList);
+		return ResponseEntity.ok(orderService.getOrdersByCustomer(id));
 	}
 	
 	@RequestMapping(path="/order/sort", method=RequestMethod.GET)
 	public ResponseEntity<?> sortOrders(@RequestParam(name="sort_by",required=false) String sortBy){
-		List<OrdersWithTotalAmount> orderList = orderService.sortOrdersByAmount();
-		return ResponseEntity.ok(orderList);
-	}
-
-	@RequestMapping(path="/order/page/{index}", method=RequestMethod.GET)
-	public ResponseEntity<?> getOrdersWithPagination(@PathVariable("index") int index){
-		List<OrderModel> orderList = orderService.getOrdersWithPagination(index);
-		return ResponseEntity.ok(orderList);
+		return ResponseEntity.ok(orderService.sortOrdersByAmount());
 	}
 	
 	@RequestMapping(path="/order/{id}", method=RequestMethod.PATCH)
