@@ -28,12 +28,8 @@ public class ItemController {
 	AuthService authService;
 
 	@RequestMapping(path="/item", method=RequestMethod.POST)
-	public ResponseEntity<?> addItem(@RequestHeader("authorization") String token, @RequestBody ItemModel itemModel) {
-		if(authService.validateToken(token)) {
-			itemService.addItem(itemModel);
-		}else {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-		}
+	public ResponseEntity<?> addItem(@RequestBody ItemModel itemModel) {
+		itemService.addItem(itemModel);
 		return ResponseEntity.accepted().build();
 	}
 	
