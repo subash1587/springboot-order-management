@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -23,7 +24,7 @@ public class ItemFT {
 	ObjectMapper objectMapper = new ObjectMapper();
 	
 	@Test
-	public List<ItemModel> getItemsTest() {
+	public void getItemsTest() {
 		HttpClient httpClient = HttpClients.createDefault();
 		HttpGet httpGet = new HttpGet("http://localhost:8080/item");
 		try {
@@ -31,7 +32,23 @@ public class ItemFT {
 			String response = EntityUtils.toString(httpResponse.getEntity());
 			List<ItemModel> items = objectMapper.readValue(response, new TypeReference<List<ItemModel>>() {
 			});
-			//Assertions.assertEquals(items.size(), 15);
+			Assertions.assertEquals(items.size(), 16);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public List<ItemModel> getItems() {
+		HttpClient httpClient = HttpClients.createDefault();
+		HttpGet httpGet = new HttpGet("http://localhost:8080/item");
+		try {
+			HttpResponse httpResponse = httpClient.execute(httpGet);
+			String response = EntityUtils.toString(httpResponse.getEntity());
+			List<ItemModel> items = objectMapper.readValue(response, new TypeReference<List<ItemModel>>() {
+			});
 			return items;
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
@@ -43,8 +60,7 @@ public class ItemFT {
 	
 	@Test
 	public void addItemtest() {
-		
-		List<ItemModel> before = getItemsTest();
+		List<ItemModel> before = getItems();
 		HttpClient httpClient = HttpClients.createDefault();
 		HttpPost httpPost = new HttpPost("http://localhost:8080/item");
 		try {
@@ -53,15 +69,26 @@ public class ItemFT {
 			httpPost.setEntity(entity);
 			httpPost.setHeader("Accept","application/json");
 			httpPost.setHeader("content-type","application/json");
-			HttpResponse httpResponse = httpClient.execute(httpPost);
-			System.out.println(httpResponse);
-			List<ItemModel> after = getItemsTest();
+			httpClient.execute(httpPost);
+			List<ItemModel> after = getItems();
 			Assertions.assertEquals(before.size()+1, after.size());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
+	}
+	
+	@Test
+	public void deleteItemTest() {
+		List<ItemModel> before = getItems();
+		HttpClient httpClient = HttpClients.createDefault();
+		HttpDelete httpDelete = new HttpDelete("http://localhost:8080/item/17");
+		try {
+			httpClient.execute(httpDelete);
+			List<ItemModel> after = getItems();
+			Assertions.assertEquals(before.size()-1, after.size());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

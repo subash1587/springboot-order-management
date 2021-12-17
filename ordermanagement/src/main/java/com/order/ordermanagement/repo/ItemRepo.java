@@ -39,5 +39,8 @@ public interface ItemRepo extends JpaRepository<ItemEntity, Integer>, ItemRepoCu
 	@Query(value="insert into item (name,price) values(:name, :price)", nativeQuery=true)
 	@Transactional
 	void insertItem(@Param("name") String name, @Param("price") double price);
+
+	@Query(value="select * from item order by :sortBy asc", nativeQuery=true)
+	List<ItemEntity> sortItems(@Param("sortBy") String sortBy);
 	
 }

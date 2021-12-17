@@ -31,8 +31,28 @@ public class ItemService {
 		itemRepo.save(itemEntity);		
 	}
 
-	public List<ItemModel> getAllItems() {
-		List<ItemEntity> itemEntityList = itemRepo.findAll();
+	public List<ItemModel> getItems(String sortBy, String orderBy, Integer index) {
+		List<ItemEntity> itemEntityList = new ArrayList<>();
+		Page<ItemEntity> itemEntityPage = null;
+		if(sortBy == null && orderBy == null) {
+			if (index == null) {
+				itemEntityList = itemRepo.findAll();
+			} else {
+				itemEntityPage = itemRepo.findAll(PageRequest.of(index, 10));
+				for(ItemEntity itemEntity : itemEntityPage) {
+					itemEntityList.add(itemEntity);
+				}
+			}
+		} else {
+			if (index == null) {
+				itemEntityList = itemRepo.sortItems(sortBy);
+			} else {
+				itemEntityPage = itemRepo.findAll(PageRequest.of(index, 10, Sort.by(Direction.DESC, sortBy)));
+				for(ItemEntity itemEntity : itemEntityPage) {
+					itemEntityList.add(itemEntity);
+				}
+			}
+		}
 		return itemMapper.convertItemEntityListToItemModelList(itemEntityList);
 	}
 
