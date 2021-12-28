@@ -36,7 +36,8 @@ public class ItemRepoCustomImpl implements ItemRepoCustom{
 					break;
 				case "ratinggt":
 					predicates.add(cb.ge(item.get("rating"), Integer.parseInt(filterColumn.getValue())));
-					break;
+					break;		
+			
 			}
 		}
 		cr.select(item).where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
