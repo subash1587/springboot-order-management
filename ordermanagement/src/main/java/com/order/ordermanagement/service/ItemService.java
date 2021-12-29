@@ -31,15 +31,20 @@ public class ItemService {
 		itemRepo.save(itemEntity);		
 	}
 
-	public List<ItemModel> getItems(String sortBy, String orderBy, Map<String, String> filterMap, Integer index) {
+	public List<ItemModel> getItems(String sortBy, String orderBy, Map<String, String> filterMap, Integer index, List<String> names) {
 		List<ItemEntity> itemEntityList = new ArrayList<>();
 		Page<ItemEntity> itemEntityPage = null;
 		
-		if(sortBy == null && orderBy == null) {
+		if(names != null) {
+			itemEntityList = itemRepo.findByNameList(names);
+			if(itemEntityList == null) {
+				throw new ApiException(ItemError.ITEM_NOT_FOUND);
+			}
+		} else if(sortBy == null && orderBy == null) {
 			if (index == null && filterMap == null) {
 				itemEntityList = itemRepo.findAll();
 			} else if(index != null && filterMap == null){
-				itemEntityPage = itemRepo.findAll(PageRequest.of(index, 10));
+				itemEntityPage = itemRepo.findAll(PageRequest.of(index, 5));
 				for(ItemEntity itemEntity : itemEntityPage) {
 					itemEntityList.add(itemEntity);
 				}
@@ -120,14 +125,6 @@ public class ItemService {
 	public ItemModel getItem(int itemId) {
 		ItemEntity itemEntity = itemRepo.findById(itemId).orElseThrow(()->new ApiException(ItemError.ITEM_NOT_FOUND));
 		return itemMapper.convertItemEntityToItemModel(itemEntity);
-	}
-	
-	public List<ItemModel> getItemsByNameList(List<String> names) {
-		List<ItemEntity> itemEntityList = itemRepo.findByNameList(names);
-		if(itemEntityList == null) {
-			throw new ApiException(ItemError.ITEM_NOT_FOUND);
-		}
-		return itemMapper.convertItemEntityListToItemModelList(itemEntityList);
 	}
 	
 	public void updateItem(int itemId, String itemName, ItemModel itemModel) {

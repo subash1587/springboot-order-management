@@ -31,12 +31,13 @@ public class ItemController {
 		return ResponseEntity.accepted().build();
 	}
 
-	@RequestMapping(path = "/item", method = RequestMethod.GET)
+	@RequestMapping(path = "/items", method = RequestMethod.POST)
 	public ResponseEntity<?> getItems(@RequestParam(name = "sort_by", required = false) String sortBy,
 			@RequestParam(name = "order_by", required = false) String orderBy,
-			@RequestBody(required=false) Map<String, String> filterMap,
-			@RequestParam(name = "page", required = false) Integer index) {
-		List<ItemModel> itemList = itemService.getItems(sortBy, orderBy, filterMap, index);
+			@RequestBody(required = false) Map<String, String> filterMap,
+			@RequestParam(name = "page", required = false) Integer index,
+			@RequestParam(name = "names", required = false) List<String> names) {
+		List<ItemModel> itemList = itemService.getItems(sortBy, orderBy, filterMap, index, names);
 		return ResponseEntity.ok(itemList);
 	}
 
@@ -46,14 +47,10 @@ public class ItemController {
 		return ResponseEntity.ok(itemModel);
 	}
 
-	@RequestMapping(path = "/item/names", method = RequestMethod.GET)
-	public ResponseEntity<?> getItemsByNameList(@RequestBody List<String> names) {
-		List<ItemModel> itemModelList = itemService.getItemsByNameList(names);
-		return ResponseEntity.ok(itemModelList);
-	}
-
 	@RequestMapping(path = "/item/{id}", method = RequestMethod.PATCH)
-	public ResponseEntity<?> updateItem(@PathVariable("id") int itemId, @RequestParam(value="name", required=false) String name, @RequestBody ItemModel itemModel) {
+	public ResponseEntity<?> updateItem(@PathVariable("id") int itemId,
+			@RequestParam(value = "name", required = false) String name, 
+			@RequestBody(required=false) ItemModel itemModel) {
 		itemService.updateItem(itemId, name, itemModel);
 		return ResponseEntity.ok().build();
 	}
