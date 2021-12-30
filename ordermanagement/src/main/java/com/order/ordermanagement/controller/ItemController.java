@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.order.ordermanagement.model.ItemModel;
 import com.order.ordermanagement.service.AuthService;
 import com.order.ordermanagement.service.ItemService;
+import com.order.ordermanagement.validation.ItemValidator;
 
 @RestController
 public class ItemController {
@@ -24,9 +25,13 @@ public class ItemController {
 
 	@Autowired
 	AuthService authService;
+	
+	@Autowired
+	ItemValidator itemValidator;
 
 	@RequestMapping(path = "/item", method = RequestMethod.POST)
 	public ResponseEntity<?> addItem(@RequestBody ItemModel itemModel) {
+		itemValidator.validateItem(itemModel);
 		itemService.addItem(itemModel);
 		return ResponseEntity.accepted().build();
 	}

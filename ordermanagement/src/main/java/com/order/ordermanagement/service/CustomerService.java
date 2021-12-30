@@ -31,15 +31,23 @@ public class CustomerService {
 		customerRepo.save(customerEntity);
 	}
 
-	public List<CustomerModel> getCustomers(String sortBy, String orderBy) {
+	public List<CustomerModel> getCustomers(String sortBy, String orderBy, String name, String email, String city, String state) {
 		List<CustomerEntity> customerEntityList = new ArrayList<>();
-		if((sortBy != null && orderBy != null) || (sortBy != null && orderBy == null)) {
+		if(city != null) {
+			customerEntityList = customerRepo.findCustomerByCity(city);
+		}else if(state != null) {
+			customerEntityList = customerRepo.findCustomerByState(state);
+		}else if(name != null) {
+			customerEntityList = customerRepo.findCustomerByName(name);
+		}else if(email != null) {
+			customerEntityList = customerRepo.findCustomerByEmail(email);
+		}else if(sortBy != null) {
 			switch (sortBy) {
 			case "name":
-				if (orderBy == null || orderBy.equalsIgnoreCase("asc")) {
-					customerEntityList = customerRepo.findAll(Sort.by(Sort.Direction.ASC, sortBy));
-				} else {
+				if (orderBy != null && orderBy.equalsIgnoreCase("desc")) {
 					customerEntityList = customerRepo.findAll(Sort.by(Sort.Direction.DESC, sortBy));
+				} else {
+					customerEntityList = customerRepo.findAll(Sort.by(Sort.Direction.ASC, sortBy));
 				}
 				break;
 			case "namelength":
@@ -77,15 +85,5 @@ public class CustomerService {
 	public void deleteCustomer(int id) {
 		customerRepo.findById(id).orElseThrow(()-> new ApiException(CustomerError.CUSTOMER_NOT_FOUND));
 		customerRepo.deleteById(id);
-	}
-
-	public List<CustomerModel> searchCustomer(String parameter, String value) {
-		List<CustomerEntity> customerEntityList = new ArrayList<>();
-		if (parameter.equals("city")) {
-			customerEntityList = customerRepo.findCustomerByCity(value);
-		} else if(parameter.equals("state")) {
-			customerEntityList = customerRepo.findCustomerByState(value);
-		}
-		return customerMapper.convertCustomerEntityListToCustomerModelList(customerEntityList);
 	}
 }
